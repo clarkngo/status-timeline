@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Justine Cho — Immigration Journey | Status Timeline</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Inter font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
+          colors: {
+            brand: { 50: '#f0f4ff', 100: '#e0e9ff', 500: '#4f6ef7', 600: '#3d5ce8', 700: '#2e4ad6' }
+          },
+          animation: {
+            'fade-in-up': 'fadeInUp 0.5s ease both',
+            'fade-in': 'fadeIn 0.3s ease both',
+          },
+          keyframes: {
+            fadeInUp: { '0%': { opacity: 0, transform: 'translateY(16px)' }, '100%': { opacity: 1, transform: 'translateY(0)' } },
+            fadeIn:   { '0%': { opacity: 0 }, '100%': { opacity: 1 } },
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* ── Global ── */
+    *, *::before, *::after { box-sizing: border-box; }
+    body { background: #f8f9fc; font-family: 'Inter', system-ui, sans-serif; }
+
+    /* ── Timeline spine ── */
+    .timeline-spine {
+      position: absolute;
+      left: 12px;               /* mobile: left-anchored */
+      top: 0; bottom: 0;
+      width: 2px;
+      background: linear-gradient(to bottom, transparent 0%, #e2e8f0 4%, #e2e8f0 96%, transparent 100%);
+    }
+    @media (min-width: 520px) {
+      .timeline-spine {
+        left: 50%;
+        transform: translateX(-50%);
+      }
+    }
+
+    /* ── Desktop alternating card positioning ── */
+    /* Fix: use plain CSS (not Tailwind arbitrary calc) so calc() spaces are valid.
+       Breakpoint: 520px+ activates the two-column alternating layout.
+       At real desktop widths (1024px+) each card gets ~460px — very comfortable. */
+    @media (min-width: 520px) {
+      .card-left  { padding-right: calc(50% + 28px); }
+      .card-right { padding-left:  calc(50% + 28px); }
+    }
+
+    /* ── Card connector dot ── */
+    .timeline-dot {
+      position: absolute;
+      top: 26px;
+      left: 12px;               /* mobile: aligns with left spine */
+      transform: translate(-50%, -50%);
+      width: 13px; height: 13px;
+      border-radius: 50%;
+      border: 3px solid #f8f9fc;
+      box-shadow: 0 0 0 2px currentColor;
+      z-index: 10;
+    }
+    @media (min-width: 520px) {
+      .timeline-dot { left: 50%; }
+    }
+
+    /* ── Remove mobile spine inset at two-column breakpoint ── */
+    @media (min-width: 520px) {
+      .pl-7 { padding-left: 0 !important; }
+    }
+
+    /* ── Card connector line (two-column only) ── */
+    @media (min-width: 520px) {
+      .connector-left::after, .connector-right::before {
+        content: '';
+        position: absolute;
+        top: 25px;
+        height: 1px;
+        background: #cbd5e1;
+        width: 28px;
+        z-index: 1;
+      }
+      .connector-left::after   { right: -28px; }
+      .connector-right::before { left:  -28px; }
+    }
+
+    /* ── Keyframes (defined here so Tailwind CDN doesn't need to emit them) ── */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+
+    /* ── Card hover ── */
+    .timeline-card {
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .timeline-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 32px -8px rgba(0,0,0,0.12), 0 4px 12px -4px rgba(0,0,0,0.06);
+    }
+
+    /* ── Filter chip ── */
+    .filter-chip {
+      cursor: pointer;
+      transition: all 0.15s ease;
+      user-select: none;
+    }
+    .filter-chip.active {
+      background: #1e293b;
+      color: #fff;
+      border-color: #1e293b;
+    }
+
+    /* ── Sort toggle ── */
+    .sort-btn { transition: all 0.15s ease; }
+
+    /* ── Stagger animation for cards ── */
+    .timeline-item { opacity: 0; animation: fadeInUp 0.45s ease forwards; }
+    @media (prefers-reduced-motion: reduce) {
+      .timeline-item { opacity: 1; animation: none; }
+    }
+
+    /* ── Hidden via filter ── */
+    .timeline-item.hidden-by-filter {
+      display: none;
+    }
+
+    /* ── Status banner gradient ── */
+    .status-banner {
+      background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+    }
+
+    /* ── Scrollbar ── */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 99px; }
+
+    /* ── Hide horizontal scrollbar on filter strip ── */
+    .scrollbar-hide::-webkit-scrollbar { display: none; }
+    .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
+    /* ── line-clamp polyfill ── */
+    .line-clamp-2 {
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+  </style>
+</head>
+
+<body class="min-h-screen text-slate-800">
+
+  <!-- ════════════════════════════════════════════
+       STICKY HEADER / STATUS BANNER
+  ════════════════════════════════════════════ -->
+  <header class="status-banner sticky top-0 z-50 shadow-xl">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between gap-3">
+      <!-- Left: breadcrumb + title (single row on mobile) -->
+      <div class="flex items-center gap-3 min-w-0">
+        <a href="index.html" class="inline-flex items-center gap-1 text-slate-400 hover:text-slate-200 transition-colors shrink-0" aria-label="All Timelines">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+          <span class="hidden sm:inline text-xs font-medium tracking-widest uppercase">All Timelines</span>
+        </a>
+        <span class="text-slate-600 hidden sm:inline">|</span>
+        <h1 class="text-white font-semibold text-base sm:text-lg leading-tight truncate">Justine Cho</h1>
+      </div>
+      <!-- Right: next milestone pill — compact on mobile -->
+      <div class="flex items-center gap-2 bg-white/10 backdrop-blur border border-white/20 rounded-xl px-3 py-2 shrink-0">
+        <span class="relative flex h-2 w-2 shrink-0">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+        </span>
+        <!-- Mobile: short label; Desktop: full text -->
+        <p class="text-white text-xs font-semibold leading-tight">
+          <span class="sm:hidden">Jun 9, 2026</span>
+          <span class="hidden sm:inline">Interview — June 9, 2026</span>
+        </p>
+      </div>
+    </div>
+  </header>
+
+  <!-- ════════════════════════════════════════════
+       CONTROLS: FILTERS + SORT
+  ════════════════════════════════════════════ -->
+  <div class="max-w-5xl mx-auto pt-5 pb-1">
+
+    <!-- Filter chips — horizontally scrollable on mobile, no padding bleed -->
+    <div class="overflow-x-auto scrollbar-hide px-4 sm:px-6 pb-1">
+      <div class="flex gap-2 w-max sm:w-auto sm:flex-wrap" id="filter-bar" role="group" aria-label="Filter by category">
+        <button class="filter-chip active text-xs font-medium px-3 py-1.5 rounded-full border border-slate-200 bg-white text-slate-600 whitespace-nowrap" data-filter="all">All</button>
+        <button class="filter-chip text-xs font-medium px-3 py-1.5 rounded-full border border-slate-200 bg-white text-slate-600 whitespace-nowrap" data-filter="student">Student / F1</button>
+        <button class="filter-chip text-xs font-medium px-3 py-1.5 rounded-full border border-slate-200 bg-white text-slate-600 whitespace-nowrap" data-filter="work">Work Visas</button>
+        <button class="filter-chip text-xs font-medium px-3 py-1.5 rounded-full border border-slate-200 bg-white text-slate-600 whitespace-nowrap" data-filter="greencard">Green Card</button>
+        <button class="filter-chip text-xs font-medium px-3 py-1.5 rounded-full border border-slate-200 bg-white text-slate-600 whitespace-nowrap" data-filter="ead">EAD / I-765</button>
+        <button class="filter-chip text-xs font-medium px-3 py-1.5 rounded-full border border-slate-200 bg-white text-slate-600 whitespace-nowrap" data-filter="appeals">Appeals</button>
+        <!-- Sort toggle inline on mobile, flush right on desktop -->
+        <div class="flex items-center gap-1 ml-2 sm:ml-auto shrink-0 bg-slate-100 rounded-full p-0.5">
+          <button id="sort-asc" class="sort-btn text-xs font-medium px-3 py-1.5 rounded-full bg-white shadow-sm text-slate-700 whitespace-nowrap" title="Oldest first">
+            <svg xmlns="http://www.w3.org/2000/svg" class="inline w-3 h-3 mr-0.5 -mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7"/></svg>
+            <span class="hidden sm:inline">Oldest</span>
+            <span class="sm:hidden">↑</span>
+          </button>
+          <button id="sort-desc" class="sort-btn text-xs font-medium px-3 py-1.5 rounded-full text-slate-500 whitespace-nowrap" title="Newest first">
+            <svg xmlns="http://www.w3.org/2000/svg" class="inline w-3 h-3 mr-0.5 -mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+            <span class="hidden sm:inline">Newest</span>
+            <span class="sm:hidden">↓</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ════════════════════════════════════════════
+       TIMELINE
+  ════════════════════════════════════════════ -->
+  <main class="max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-10">
+    <div class="relative" id="timeline-container">
+      <!-- Spine — left-anchored on mobile, centered on desktop -->
+      <div class="timeline-spine"></div>
+
+      <!-- Cards injected by JS -->
+      <div id="timeline-list" class="space-y-0"></div>
+    </div>
+
+    <!-- Empty state -->
+    <div id="empty-state" class="hidden text-center py-24">
+      <div class="inline-flex items-center justify-center w-14 h-14 rounded-full bg-slate-100 mb-4">
+        <svg class="w-7 h-7 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z"/></svg>
+      </div>
+      <p class="text-slate-500 font-medium">No events match this filter.</p>
+      <p class="text-slate-400 text-sm mt-1">Try selecting a different category.</p>
+    </div>
+  </main>
+
+  <!-- ════════════════════════════════════════════
+       FOOTER
+  ════════════════════════════════════════════ -->
+  <footer class="border-t border-slate-200 mt-4 mb-10">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 py-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 text-slate-400 text-xs">
+      <p>Justine Cho &mdash; Immigration Status Timeline</p>
+      <p>Last updated: June 2026</p>
+    </div>
+  </footer>
+
+  <!-- ════════════════════════════════════════════
+       DATA + JAVASCRIPT
+  ════════════════════════════════════════════ -->
+  <script>
+    // ─── Color & badge helpers ──────────────────────────────────────────────────
+
+    const STATUS_STYLES = {
+      success: {
+        dot:    'text-emerald-500',
+        border: 'border-l-emerald-400',
+        badge:  'bg-emerald-50 text-emerald-700 ring-emerald-200',
+        icon: `<svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>`,
+      },
+      warning: {
+        dot:    'text-amber-500',
+        border: 'border-l-amber-400',
+        badge:  'bg-amber-50 text-amber-700 ring-amber-200',
+        icon: `<svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>`,
+      },
+      critical: {
+        dot:    'text-rose-500',
+        border: 'border-l-rose-400',
+        badge:  'bg-rose-50 text-rose-700 ring-rose-200',
+        icon: `<svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>`,
+      },
+      info: {
+        dot:    'text-sky-500',
+        border: 'border-l-sky-400',
+        badge:  'bg-sky-50 text-sky-700 ring-sky-200',
+        icon: `<svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M12 2a10 10 0 100 20A10 10 0 0012 2z"/></svg>`,
+      },
+    };
+
+    // ─── Timeline data ──────────────────────────────────────────────────────────
+    // sortKey: YYYYMM integer for reliable chronological sorting
+
+    const EVENTS = [
+      {
+        sortKey: 201103,
+        date: 'March 2011',
+        title: 'Turned 21 — Previous I-485 Denied',
+        note: 'Aged out of dependent child status; prior adjustment of status application denied.',
+        status: 'warning',
+        categories: ['greencard'],
+        badges: ['I-485 Denial', 'Age-Out'],
+      },
+      {
+        sortKey: 201211,
+        date: 'November 7, 2012',
+        title: 'New Priority Date Established',
+        note: 'Filed F2B petition under LPR parent; new priority date locks place in visa queue.',
+        status: 'success',
+        categories: ['greencard'],
+        badges: ['F2B Petition', 'I-130', 'New Priority Date'],
+      },
+      {
+        sortKey: 201101,  // span 2011-2015; key for sorting
+        date: '2011 – 2015',
+        title: 'F1 Student Visa / OPT',
+        note: 'Maintained lawful status throughout academic program and optional practical training period.',
+        status: 'info',
+        categories: ['student'],
+        badges: ['F1 Status', 'OPT'],
+      },
+      {
+        sortKey: 201501,
+        date: '2015 – 2021',
+        title: 'H-1B Work Visa',
+        note: 'Employer-sponsored specialty occupation visa; continuous legal work authorization maintained.',
+        status: 'info',
+        categories: ['work'],
+        badges: ['H-1B Visa'],
+      },
+      {
+        sortKey: 202104,
+        date: 'April 2021',
+        title: 'Priority Date Became Current (F1 Category)',
+        note: 'Parent naturalized as U.S. citizen; petition automatically converted from F2B → F1, which was immediately current.',
+        status: 'success',
+        categories: ['greencard'],
+        badges: ['F1 Category', 'PD Current', 'I-130'],
+      },
+      {
+        sortKey: 202108,
+        date: 'August 2021',
+        title: 'H-1B Employment Ended',
+        note: 'Resigned from employer; created gap in work authorization prior to EAD receipt.',
+        status: 'warning',
+        categories: ['work'],
+        badges: ['H-1B', 'Gap in Status'],
+      },
+      {
+        sortKey: 202111,
+        date: 'November 2021',
+        title: 'I-765 & I-131 Approved',
+        note: 'Employment Authorization Document and Advance Parole approved; work and travel rights restored.',
+        status: 'success',
+        categories: ['ead'],
+        badges: ['I-765 EAD', 'I-131 Parole'],
+      },
+      {
+        sortKey: 202306,
+        date: 'June 2023',
+        title: 'I-765 & I-131 Renewal Filed — I-765 Approved',
+        note: 'Biennial renewal submitted; EAD approved the same month. Advance Parole pending.',
+        status: 'success',
+        categories: ['ead'],
+        badges: ['I-765 Renewal', 'I-131 Renewal'],
+      },
+      {
+        sortKey: 202405,
+        date: 'May 2024',
+        title: 'I-131 Approved',
+        note: 'Advance Parole travel document issued; international travel now permitted without abandoning pending case.',
+        status: 'success',
+        categories: ['ead'],
+        badges: ['I-131 Approval', 'Travel Doc'],
+      },
+      {
+        sortKey: 202505,
+        date: 'May 2025',
+        title: 'I-765 Renewal Filed',
+        note: 'Standard biennial EAD renewal submitted to maintain continuous employment authorization.',
+        status: 'info',
+        categories: ['ead'],
+        badges: ['I-765 Renewal'],
+      },
+      {
+        sortKey: 202506,
+        date: 'June 2025',
+        title: 'Biometrics Completed',
+        note: 'Fingerprints and photograph captured at ASC as required for I-765 renewal processing.',
+        status: 'info',
+        categories: ['ead'],
+        badges: ['Biometrics', 'I-765'],
+      },
+      {
+        sortKey: 202507,
+        date: 'July 2025',
+        title: 'I-130 Revocation Notice',
+        note: 'NVC revoked the approved I-130 petition due to lack of response for consular processing. Critical setback.',
+        status: 'critical',
+        categories: ['greencard'],
+        badges: ['I-130 Revocation', 'NVC'],
+      },
+      {
+        sortKey: 202508,
+        date: 'August 2025',
+        title: 'I-765 Approved',
+        note: 'EAD card produced and issued; uninterrupted employment authorization confirmed.',
+        status: 'success',
+        categories: ['ead'],
+        badges: ['I-765 Approval', 'EAD'],
+      },
+      {
+        sortKey: 202509,
+        date: 'September 2025',
+        title: 'I-290B Filed',
+        note: 'Notice of Appeal filed to reopen and reconsider the revoked I-130 petition.',
+        status: 'warning',
+        categories: ['appeals', 'greencard'],
+        badges: ['I-290B Appeal', 'I-130'],
+      },
+      {
+        sortKey: 202510,
+        date: 'October 2025',
+        title: 'I-130 Reinstated',
+        note: 'NVC restored petition status following appeal; F1 priority date confirmed current.',
+        status: 'success',
+        categories: ['greencard', 'appeals'],
+        badges: ['I-130 Reinstated', 'F1 PD Current'],
+      },
+      {
+        sortKey: 202603,
+        date: 'March 2026',
+        title: 'Congressional Inquiry Submitted',
+        note: "Senator Murray's office formally contacted USCIS on case's behalf to expedite processing.",
+        status: 'info',
+        categories: ['appeals'],
+        badges: ['Congressional Inquiry', 'Senator Murray'],
+      },
+      {
+        sortKey: 202604,
+        date: 'April 2026',
+        title: 'USCIS Status Update',
+        note: 'Agency acknowledged inquiry; confirmed case is under review but interview not yet scheduled.',
+        status: 'info',
+        categories: ['appeals'],
+        badges: ['USCIS Update'],
+      },
+      {
+        sortKey: 202605,
+        date: 'May 2026',
+        title: 'Interview Scheduled',
+        note: 'USCIS confirmed interview appointment for June 9, 2026. Major milestone — final step before decision.',
+        status: 'success',
+        categories: ['greencard'],
+        badges: ['Interview Confirmed', 'June 9, 2026'],
+      },
+    ];
+
+    // ─── State ──────────────────────────────────────────────────────────────────
+
+    let activeFilter = 'all';
+    let sortAsc = true;  // true = oldest first
+
+    // ─── Render ─────────────────────────────────────────────────────────────────
+
+    function renderTimeline() {
+      const list = document.getElementById('timeline-list');
+      const empty = document.getElementById('empty-state');
+      list.innerHTML = '';
+
+      // Filter
+      let events = EVENTS.filter(e =>
+        activeFilter === 'all' || e.categories.includes(activeFilter)
+      );
+
+      // Sort
+      events = [...events].sort((a, b) =>
+        sortAsc ? a.sortKey - b.sortKey : b.sortKey - a.sortKey
+      );
+
+      if (events.length === 0) {
+        empty.classList.remove('hidden');
+        return;
+      }
+      empty.classList.add('hidden');
+
+      let lastYear = null;
+
+      events.forEach((ev, idx) => {
+        const style = STATUS_STYLES[ev.status];
+        const isLeft = idx % 2 === 0;
+
+        // ── Year divider ──────────────────────────────────────────────────────
+        const evYear = Math.floor(ev.sortKey / 100);
+        if (evYear !== lastYear) {
+          const divider = document.createElement('div');
+          divider.className = 'year-divider relative flex items-center my-6 md:my-8';
+          divider.innerHTML = `
+            <div class="flex-1 h-px bg-slate-200"></div>
+            <span class="mx-4 text-[11px] font-bold tracking-[0.18em] uppercase text-slate-400
+                         bg-[#f8f9fc] px-2">${evYear}</span>
+            <div class="flex-1 h-px bg-slate-200"></div>
+          `;
+          list.appendChild(divider);
+          lastYear = evYear;
+        }
+
+        // ── Badges ─────────────────────────────────────────────────────────────
+        const badgesHtml = ev.badges.map(b =>
+          `<span class="inline-flex items-center text-[10px] font-semibold px-2 py-0.5 rounded-full ring-1 ${style.badge}">${b}</span>`
+        ).join(' ');
+
+        // ── Wrapper: use plain CSS classes card-left / card-right for desktop ──
+        const item = document.createElement('div');
+        item.className = [
+          'timeline-item relative mb-4 md:mb-7',
+          isLeft ? 'card-left' : 'card-right',
+        ].join(' ');
+        item.dataset.categories = ev.categories.join(' ');
+        item.style.animationDelay = `${idx * 45}ms`;
+
+        // Connector class tells the ::after/::before which side to draw from
+        const connectorClass = isLeft ? 'connector-left' : 'connector-right';
+
+        // Mobile (<520px): push card right of the left spine; two-col view: no inset
+        const mobileInset = 'pl-7';
+
+        item.innerHTML = `
+          <!-- Spine dot — sits on the center line (desktop) or left line (mobile) -->
+          <span class="timeline-dot ${style.dot}"></span>
+
+          <!-- Card -->
+          <div class="${mobileInset}">
+            <article class="timeline-card ${connectorClass} relative bg-white rounded-xl
+                            shadow-sm border border-slate-100 border-l-4 ${style.border}
+                            px-4 py-3.5 md:px-5 md:py-4">
+
+              <!-- Date + status icon -->
+              <div class="flex items-center gap-1.5 mb-1">
+                <span class="${style.dot} shrink-0">${style.icon}</span>
+                <time class="text-[10px] font-semibold tracking-widest uppercase text-slate-400">${ev.date}</time>
+              </div>
+
+              <!-- Title -->
+              <h2 class="font-semibold text-slate-800 text-sm sm:text-base leading-snug mb-1.5">${ev.title}</h2>
+
+              <!-- Note — 2-line clamp on mobile, full on sm+ -->
+              <p class="text-slate-500 text-xs sm:text-sm leading-relaxed mb-2.5 line-clamp-2 sm:line-clamp-none">${ev.note}</p>
+
+              <!-- Badges -->
+              <div class="flex flex-wrap gap-1">${badgesHtml}</div>
+            </article>
+          </div>
+        `;
+
+        list.appendChild(item);
+      });
+    }
+
+    // ─── Filter chips ────────────────────────────────────────────────────────────
+
+    document.getElementById('filter-bar').addEventListener('click', e => {
+      const btn = e.target.closest('.filter-chip');
+      if (!btn) return;
+      document.querySelectorAll('.filter-chip').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      activeFilter = btn.dataset.filter;
+      renderTimeline();
+    });
+
+    // ─── Sort buttons ────────────────────────────────────────────────────────────
+
+    const sortAscBtn  = document.getElementById('sort-asc');
+    const sortDescBtn = document.getElementById('sort-desc');
+
+    function setSortUI(asc) {
+      sortAsc = asc;
+      const activeClass  = 'bg-white shadow text-slate-700';
+      const inactiveClass = 'text-slate-500';
+      if (asc) {
+        sortAscBtn.className  = `sort-btn text-xs font-medium px-3 py-1.5 rounded-full ${activeClass}`;
+        sortDescBtn.className = `sort-btn text-xs font-medium px-3 py-1.5 rounded-full ${inactiveClass}`;
+      } else {
+        sortDescBtn.className = `sort-btn text-xs font-medium px-3 py-1.5 rounded-full ${activeClass}`;
+        sortAscBtn.className  = `sort-btn text-xs font-medium px-3 py-1.5 rounded-full ${inactiveClass}`;
+      }
+      renderTimeline();
+    }
+
+    sortAscBtn.addEventListener('click',  () => setSortUI(true));
+    sortDescBtn.addEventListener('click', () => setSortUI(false));
+
+    // ─── Initial render ──────────────────────────────────────────────────────────
+    renderTimeline();
+  </script>
+</body>
+</html>
