@@ -4,6 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
   <title>Justine Cho — Status Snapshot</title>
+  <!-- html2canvas for client-side card-to-image export -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -307,6 +309,32 @@
       width: 5px; height: 5px;
       border-radius: 50%;
     }
+
+    /* ── Save button ── */
+    .save-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      max-width: 375px;
+      margin-top: 14px;
+      padding: 13px;
+      background: #1e293b;
+      color: #e2e8f0;
+      border: 1px solid #334155;
+      border-radius: 14px;
+      font-family: 'Inter', system-ui, sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s, transform 0.1s;
+      letter-spacing: 0.01em;
+    }
+    .save-btn:hover  { background: #273548; color: #fff; }
+    .save-btn:active { transform: scale(0.98); }
+    .save-btn.loading { opacity: 0.6; cursor: not-allowed; }
+    .save-btn svg { flex-shrink: 0; }
   </style>
 </head>
 <body>
@@ -426,6 +454,48 @@
     </div>
 
   </div>
+
+  <!-- Save as Image button -->
+  <button class="save-btn" id="save-btn" onclick="saveImage()">
+    <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5 5-5M12 15V3"/>
+    </svg>
+    Save as Image
+  </button>
+
+  <script>
+    async function saveImage() {
+      const btn  = document.getElementById('save-btn');
+      const card = document.querySelector('.card');
+
+      btn.classList.add('loading');
+      btn.textContent = 'Generating…';
+
+      try {
+        const canvas = await html2canvas(card, {
+          scale: 3,               // 3× for sharp retina output
+          useCORS: true,
+          backgroundColor: null,  // preserve card's own background
+          logging: false,
+        });
+
+        const link = document.createElement('a');
+        link.download = 'justine-cho-status-' + new Date().toISOString().slice(0,10) + '.png';
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+      } catch (err) {
+        alert('Could not generate image. Try screenshotting manually.');
+        console.error(err);
+      } finally {
+        btn.classList.remove('loading');
+        btn.innerHTML = `
+          <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5 5-5M12 15V3"/>
+          </svg>
+          Save as Image`;
+      }
+    }
+  </script>
 
 </body>
 </html>
