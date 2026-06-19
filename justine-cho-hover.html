@@ -49,12 +49,11 @@
     ══════════════════════════════════════════ */
     .hover-card {
       background: #fff;
-      border-radius: 14px;
+      border-radius: 8px;
       border: 1px solid #f1f5f9;
-      border-left-width: 4px;
-      box-shadow: 0 1px 4px -1px rgba(0,0,0,0.06);
+      border-left-width: 3px;
+      box-shadow: 0 1px 3px -1px rgba(0,0,0,0.06);
       cursor: default;
-      /* smooth height transition for the detail panel */
       transition: box-shadow 0.2s ease, transform 0.2s ease;
       overflow: hidden;
     }
@@ -65,7 +64,7 @@
         box-shadow: 0 8px 28px -6px rgba(0,0,0,0.13), 0 3px 10px -3px rgba(0,0,0,0.07);
         transform: translateY(-2px);
       }
-      .hover-card:hover .detail-panel { max-height: 160px; opacity: 1; }
+      .hover-card:hover .detail-panel { max-height: 120px; opacity: 1; }
       .hover-card:hover .chevron       { opacity: 0.6; transform: rotate(180deg); }
     }
 
@@ -73,15 +72,15 @@
     .hover-card.open {
       box-shadow: 0 8px 28px -6px rgba(0,0,0,0.13), 0 3px 10px -3px rgba(0,0,0,0.07);
     }
-    .hover-card.open .detail-panel { max-height: 160px; opacity: 1; }
+    .hover-card.open .detail-panel { max-height: 120px; opacity: 1; }
     .hover-card.open .chevron       { opacity: 0.6; transform: rotate(180deg); }
 
     /* ── Summary row (always visible) ── */
     .card-summary {
       display: flex;
       align-items: center;
-      gap: 10px;
-      padding: 12px 14px;
+      gap: 6px;
+      padding: 6px 8px;
       user-select: none;
     }
 
@@ -93,9 +92,8 @@
       transition: max-height 0.25s ease, opacity 0.2s ease;
     }
     .detail-inner {
-      padding: 0 14px 12px;
       border-top: 1px solid #f1f5f9;
-      padding-top: 10px;
+      padding: 6px 8px 8px;
     }
 
     /* ── Chevron ── */
@@ -103,16 +101,16 @@
 
     /* ── Year divider ── */
     .year-divider {
-      grid-column: 1 / -1;           /* span all columns */
+      grid-column: 1 / -1;
       display: flex;
       align-items: center;
-      gap: 10px;
-      padding: 4px 0 2px;
+      gap: 8px;
+      padding: 2px 0 1px;
     }
     .year-divider span {
-      font-size: 10px;
+      font-size: 9px;
       font-weight: 700;
-      letter-spacing: 0.18em;
+      letter-spacing: 0.16em;
       text-transform: uppercase;
       color: #94a3b8;
       white-space: nowrap;
@@ -123,16 +121,13 @@
       height: 1px;
       background: #e2e8f0;
     }
-    .year-divider::before { display: none; }  /* left side hidden; label is leftmost */
+    .year-divider::before { display: none; }
 
-    /* ── Grid ── */
+    /* ── Grid — always 2 columns ── */
     .cards-grid {
       display: grid;
-      grid-template-columns: 1fr;
-      gap: 8px;
-    }
-    @media (min-width: 600px) {
-      .cards-grid { grid-template-columns: 1fr 1fr; }
+      grid-template-columns: 1fr 1fr;
+      gap: 4px;
     }
 
     /* ── Hidden by filter ── */
@@ -162,7 +157,7 @@
        STICKY HEADER
   ══════════════════════════════════════════ -->
   <header class="status-banner sticky top-0 z-50 shadow-xl">
-    <div class="max-w-5xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-3">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 py-2 flex items-center justify-between gap-3">
 
       <!-- Left: back + name + view switcher -->
       <div class="flex items-center gap-2.5 min-w-0">
@@ -190,7 +185,7 @@
       <!-- Right: snapshot + milestone pill -->
       <div class="flex items-center gap-2 shrink-0">
         <a href="snapshot.html" class="inline-flex items-center gap-1.5 text-slate-400 hover:text-white text-xs font-medium transition-colors">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path stroke-linecap="round" stroke-linejoin="round" d="M3 9h18M9 21V9"/></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path stroke-linecap="round" stroke-linejoin="round" d="M3 9h18M9 21V9"/></svg>
           Snapshot
         </a>
         <div class="flex items-center gap-2 bg-white/10 border border-white/20 rounded-xl px-3 py-2">
@@ -211,18 +206,18 @@
   <!-- ══════════════════════════════════════════
        CONTROLS
   ══════════════════════════════════════════ -->
-  <div class="max-w-5xl mx-auto pt-5 pb-1">
+  <div class="max-w-5xl mx-auto pt-2 pb-0">
     <div class="overflow-x-auto scrollbar-hide px-4 sm:px-6 pb-1">
-      <div class="flex gap-2 w-max sm:w-auto sm:flex-wrap" id="filter-bar" role="group" aria-label="Filter by category">
-        <button class="filter-chip active text-xs font-medium px-3 py-1.5 rounded-full border border-slate-200 bg-white text-slate-600 whitespace-nowrap" data-filter="all">All</button>
-        <button class="filter-chip text-xs font-medium px-3 py-1.5 rounded-full border border-slate-200 bg-white text-slate-600 whitespace-nowrap" data-filter="student">Student / F1</button>
-        <button class="filter-chip text-xs font-medium px-3 py-1.5 rounded-full border border-slate-200 bg-white text-slate-600 whitespace-nowrap" data-filter="work">Work Visas</button>
-        <button class="filter-chip text-xs font-medium px-3 py-1.5 rounded-full border border-slate-200 bg-white text-slate-600 whitespace-nowrap" data-filter="greencard">Green Card</button>
-        <button class="filter-chip text-xs font-medium px-3 py-1.5 rounded-full border border-slate-200 bg-white text-slate-600 whitespace-nowrap" data-filter="ead">EAD / I-765</button>
-        <button class="filter-chip text-xs font-medium px-3 py-1.5 rounded-full border border-slate-200 bg-white text-slate-600 whitespace-nowrap" data-filter="appeals">Appeals</button>
-        <div class="flex items-center gap-1 ml-2 shrink-0 bg-slate-100 rounded-full p-0.5">
-          <button id="sort-asc"  class="sort-btn text-xs font-medium px-3 py-1.5 rounded-full bg-white shadow-sm text-slate-700 whitespace-nowrap">↑ Oldest</button>
-          <button id="sort-desc" class="sort-btn text-xs font-medium px-3 py-1.5 rounded-full text-slate-500 whitespace-nowrap">↓ Newest</button>
+      <div class="flex gap-1.5 w-max sm:w-auto sm:flex-wrap" id="filter-bar" role="group" aria-label="Filter by category">
+        <button class="filter-chip active text-[10px] font-medium px-2 py-1 rounded-full border border-slate-200 bg-white text-slate-600 whitespace-nowrap" data-filter="all">All</button>
+        <button class="filter-chip text-[10px] font-medium px-2 py-1 rounded-full border border-slate-200 bg-white text-slate-600 whitespace-nowrap" data-filter="student">F1</button>
+        <button class="filter-chip text-[10px] font-medium px-2 py-1 rounded-full border border-slate-200 bg-white text-slate-600 whitespace-nowrap" data-filter="work">Work</button>
+        <button class="filter-chip text-[10px] font-medium px-2 py-1 rounded-full border border-slate-200 bg-white text-slate-600 whitespace-nowrap" data-filter="greencard">Green Card</button>
+        <button class="filter-chip text-[10px] font-medium px-2 py-1 rounded-full border border-slate-200 bg-white text-slate-600 whitespace-nowrap" data-filter="ead">EAD</button>
+        <button class="filter-chip text-[10px] font-medium px-2 py-1 rounded-full border border-slate-200 bg-white text-slate-600 whitespace-nowrap" data-filter="appeals">Appeals</button>
+        <div class="flex items-center gap-0.5 ml-1 shrink-0 bg-slate-100 rounded-full p-0.5">
+          <button id="sort-asc"  class="sort-btn text-[10px] font-medium px-2 py-1 rounded-full bg-white shadow-sm text-slate-700 whitespace-nowrap">↑ Old</button>
+          <button id="sort-desc" class="sort-btn text-[10px] font-medium px-2 py-1 rounded-full text-slate-500 whitespace-nowrap">↓ New</button>
         </div>
       </div>
     </div>
@@ -231,32 +226,13 @@
   <!-- ══════════════════════════════════════════
        CARD GRID
   ══════════════════════════════════════════ -->
-  <main class="max-w-5xl mx-auto px-4 sm:px-6 py-5">
-
-    <!-- Hint -->
-    <p id="hover-hint" class="text-center text-xs text-slate-400 mb-4 transition-opacity duration-300">
-      <span class="hidden sm:inline">Hover</span><span class="sm:hidden">Tap</span> a card to reveal details
-    </p>
+  <main class="max-w-5xl mx-auto px-4 sm:px-6 py-2">
 
     <div class="cards-grid" id="cards-grid"></div>
 
-    <div id="empty-state" class="hidden text-center py-16 text-slate-400 text-sm">No events match this filter.</div>
+    <div id="empty-state" class="hidden text-center py-8 text-slate-400 text-xs">No events match this filter.</div>
 
   </main>
-
-  <!-- Snapshot CTA -->
-  <div class="max-w-5xl mx-auto px-4 sm:px-6 pb-10">
-    <a href="snapshot.html"
-       class="flex items-center justify-center gap-2.5 w-full rounded-2xl border border-slate-200 bg-white
-              px-5 py-4 text-sm font-semibold text-slate-600 shadow-sm
-              hover:border-slate-300 hover:text-slate-800 hover:shadow-md transition-all group">
-      <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-slate-400 group-hover:text-slate-600 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5 5-5M12 15V3"/>
-      </svg>
-      View &amp; Save Status Snapshot
-      <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 text-slate-300 group-hover:text-slate-400 group-hover:translate-x-0.5 transition-all" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
-    </a>
-  </div>
 
   <!-- ══════════════════════════════════════════
        DATA + JS
@@ -267,22 +243,22 @@
       success:  {
         border: 'border-l-emerald-400', dot: 'text-emerald-500',
         badge:  'bg-emerald-50 text-emerald-700 ring-emerald-200',
-        icon: `<svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>`,
+        icon: `<svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>`,
       },
       warning:  {
         border: 'border-l-amber-400',   dot: 'text-amber-500',
         badge:  'bg-amber-50 text-amber-700 ring-amber-200',
-        icon: `<svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>`,
+        icon: `<svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>`,
       },
       critical: {
         border: 'border-l-rose-400',    dot: 'text-rose-500',
         badge:  'bg-rose-50 text-rose-700 ring-rose-200',
-        icon: `<svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>`,
+        icon: `<svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>`,
       },
       info:     {
         border: 'border-l-sky-400',     dot: 'text-sky-500',
         badge:  'bg-sky-50 text-sky-700 ring-sky-200',
-        icon: `<svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M12 2a10 10 0 100 20A10 10 0 0012 2z"/></svg>`,
+        icon: `<svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M12 2a10 10 0 100 20A10 10 0 0012 2z"/></svg>`,
       },
     };
 
@@ -348,7 +324,7 @@
 
         // Badges
         const badgesHtml = ev.badges.map(b =>
-          `<span class="inline-flex items-center text-[10px] font-semibold px-2 py-0.5 rounded-full ring-1 ${s.badge}">${b}</span>`
+          `<span class="inline-flex items-center text-[9px] font-semibold px-1.5 py-0.5 rounded-full ring-1 ${s.badge}">${b}</span>`
         ).join('');
 
         // Wrapper (for filter hiding + animation)
@@ -362,22 +338,19 @@
         card.className = `hover-card ${s.border}`;
 
         card.innerHTML = `
-          <!-- Summary: always visible -->
           <div class="card-summary">
-            <span class="${s.dot} shrink-0">${s.icon}</span>
+            <span class="${s.dot} shrink-0" style="width:12px;height:12px;display:flex;align-items:center;justify-content:center">${s.icon}</span>
             <div class="flex-1 min-w-0">
-              <time class="block text-[10px] font-semibold tracking-widest uppercase text-slate-400 mb-0.5">${ev.date}</time>
-              <h2 class="font-semibold text-slate-800 text-sm leading-snug">${ev.title}</h2>
+              <time class="block text-[9px] font-semibold tracking-wider uppercase text-slate-400 leading-none mb-0.5">${ev.date}</time>
+              <h2 class="font-semibold text-slate-800 text-[11px] leading-tight">${ev.title}</h2>
             </div>
-            <svg class="chevron w-3.5 h-3.5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+            <svg class="chevron w-3 h-3 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
               <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
             </svg>
           </div>
-
-          <!-- Detail: revealed on hover / tap -->
           <div class="detail-panel">
             <div class="detail-inner">
-              <p class="text-slate-500 text-xs leading-relaxed mb-2">${ev.note}</p>
+              <p class="text-slate-500 text-[10px] leading-relaxed mb-1.5">${ev.note}</p>
               <div class="flex flex-wrap gap-1">${badgesHtml}</div>
             </div>
           </div>
