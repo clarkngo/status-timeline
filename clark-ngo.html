@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Clark Ngo — US Presence History | Status Timeline</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
+        }
+      }
+    }
+  </script>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    body { background: #f8f9fc; font-family: 'Inter', system-ui, sans-serif; }
+
+    .timeline-spine {
+      position: absolute;
+      left: 12px;
+      top: 0; bottom: 0;
+      width: 2px;
+      background: linear-gradient(to bottom, transparent 0%, #e2e8f0 4%, #e2e8f0 96%, transparent 100%);
+    }
+    @media (min-width: 520px) {
+      .timeline-spine { left: 50%; transform: translateX(-50%); }
+    }
+
+    @media (min-width: 520px) {
+      .card-left  { padding-right: calc(50% + 28px); }
+      .card-right { padding-left:  calc(50% + 28px); }
+    }
+
+    .timeline-dot {
+      position: absolute;
+      top: 26px;
+      left: 12px;
+      transform: translate(-50%, -50%);
+      width: 13px; height: 13px;
+      border-radius: 50%;
+      border: 3px solid #f8f9fc;
+      box-shadow: 0 0 0 2px currentColor;
+      z-index: 10;
+    }
+    @media (min-width: 520px) {
+      .timeline-dot { left: 50%; }
+      .pl-7 { padding-left: 0 !important; }
+    }
+
+    @media (min-width: 520px) {
+      .connector-left::after, .connector-right::before {
+        content: '';
+        position: absolute;
+        top: 25px;
+        height: 1px;
+        background: #cbd5e1;
+        width: 28px;
+        z-index: 1;
+      }
+      .connector-left::after   { right: -28px; }
+      .connector-right::before { left:  -28px; }
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+
+    .timeline-card { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+    .timeline-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 32px -8px rgba(0,0,0,0.12), 0 4px 12px -4px rgba(0,0,0,0.06);
+    }
+
+    .filter-chip { cursor: pointer; transition: all 0.15s ease; user-select: none; }
+    .filter-chip.active { background: #1e293b; color: #fff; border-color: #1e293b; }
+    .sort-btn { transition: all 0.15s ease; }
+
+    .timeline-item { opacity: 0; animation: fadeInUp 0.45s ease forwards; }
+    @media (prefers-reduced-motion: reduce) { .timeline-item { opacity: 1; animation: none; } }
+    .timeline-item.hidden-by-filter { display: none; }
+
+    .status-banner { background: linear-gradient(135deg, #1e293b 0%, #334155 100%); }
+
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 99px; }
+    .scrollbar-hide::-webkit-scrollbar { display: none; }
+    .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
+    .line-clamp-2 {
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    /* Upcoming event pulse ring */
+    .upcoming-ring {
+      box-shadow: 0 0 0 3px rgba(251,191,36,0.35), 0 0 0 6px rgba(251,191,36,0.12);
+    }
+  </style>
+</head>
+
+<body class="min-h-screen text-slate-800">
+
+  <!-- ════════════════════════════════════════════
+       STICKY HEADER
+  ════════════════════════════════════════════ -->
+  <header class="status-banner sticky top-0 z-50 shadow-xl">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between gap-3">
+      <div class="flex items-center gap-3 min-w-0">
+        <a href="index.html" class="inline-flex items-center gap-1 text-slate-400 hover:text-slate-200 transition-colors shrink-0" aria-label="All Timelines">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+          <span class="hidden sm:inline text-xs font-medium tracking-widest uppercase">All Timelines</span>
+        </a>
+        <span class="text-slate-600 hidden sm:inline">|</span>
+        <h1 class="text-white font-semibold text-base sm:text-lg leading-tight truncate">Clark Ngo</h1>
+      </div>
+      <div class="flex items-center gap-2 bg-white/10 backdrop-blur border border-white/20 rounded-xl px-3 py-2 shrink-0">
+        <span class="relative flex h-2 w-2 shrink-0">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span>
+        </span>
+        <p class="text-white text-xs font-semibold leading-tight">
+          <span class="sm:hidden">Marriage Jul 19</span>
+          <span class="hidden sm:inline">F1 Active — Marriage Jul 19, 2026</span>
+        </p>
+      </div>
+    </div>
+  </header>
+
+  <!-- ════════════════════════════════════════════
+       CONTROLS
+  ════════════════════════════════════════════ -->
+  <div class="max-w-5xl mx-auto pt-5 pb-1">
+    <div class="overflow-x-auto scrollbar-hide px-4 sm:px-6 pb-1">
+      <div class="flex gap-2 w-max sm:w-auto sm:flex-wrap" id="filter-bar" role="group" aria-label="Filter by category">
+        <button class="filter-chip active text-xs font-medium px-3 py-1.5 rounded-full border border-slate-200 bg-white text-slate-600 whitespace-nowrap" data-filter="all">All</button>
+        <button class="filter-chip text-xs font-medium px-3 py-1.5 rounded-full border border-slate-200 bg-white text-slate-600 whitespace-nowrap" data-filter="visitor">Visitor / B1B2</button>
+        <button class="filter-chip text-xs font-medium px-3 py-1.5 rounded-full border border-slate-200 bg-white text-slate-600 whitespace-nowrap" data-filter="student">Student / F1</button>
+        <button class="filter-chip text-xs font-medium px-3 py-1.5 rounded-full border border-slate-200 bg-white text-slate-600 whitespace-nowrap" data-filter="opt">OPT / STEM</button>
+        <button class="filter-chip text-xs font-medium px-3 py-1.5 rounded-full border border-slate-200 bg-white text-slate-600 whitespace-nowrap" data-filter="work">Work / H-1B</button>
+        <button class="filter-chip text-xs font-medium px-3 py-1.5 rounded-full border border-slate-200 bg-white text-slate-600 whitespace-nowrap" data-filter="travel">Travel</button>
+        <button class="filter-chip text-xs font-medium px-3 py-1.5 rounded-full border border-slate-200 bg-white text-slate-600 whitespace-nowrap" data-filter="marriage">Marriage</button>
+        <div class="flex items-center gap-1 ml-2 sm:ml-auto shrink-0 bg-slate-100 rounded-full p-0.5">
+          <button id="sort-asc" class="sort-btn text-xs font-medium px-3 py-1.5 rounded-full bg-white shadow-sm text-slate-700 whitespace-nowrap" title="Oldest first">
+            <svg xmlns="http://www.w3.org/2000/svg" class="inline w-3 h-3 mr-0.5 -mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7"/></svg>
+            <span class="hidden sm:inline">Oldest</span><span class="sm:hidden">↑</span>
+          </button>
+          <button id="sort-desc" class="sort-btn text-xs font-medium px-3 py-1.5 rounded-full text-slate-500 whitespace-nowrap" title="Newest first">
+            <svg xmlns="http://www.w3.org/2000/svg" class="inline w-3 h-3 mr-0.5 -mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+            <span class="hidden sm:inline">Newest</span><span class="sm:hidden">↓</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════
+       TIMELINE
+  ════════════════════════════════════════════ -->
+  <main class="max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-10">
+    <div class="relative" id="timeline-container">
+      <div class="timeline-spine"></div>
+      <div id="timeline-list" class="space-y-0"></div>
+    </div>
+    <div id="empty-state" class="hidden text-center py-24">
+      <div class="inline-flex items-center justify-center w-14 h-14 rounded-full bg-slate-100 mb-4">
+        <svg class="w-7 h-7 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z"/></svg>
+      </div>
+      <p class="text-slate-500 font-medium">No events match this filter.</p>
+      <p class="text-slate-400 text-sm mt-1">Try selecting a different category.</p>
+    </div>
+  </main>
+
+  <!-- ════════════════════════════════════════════
+       FOOTER
+  ════════════════════════════════════════════ -->
+  <footer class="border-t border-slate-200 mt-4 mb-10">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 py-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 text-slate-400 text-xs">
+      <p>Clark Ngo &mdash; US Presence History & Immigration Timeline</p>
+      <p>Last updated: July 2026</p>
+    </div>
+  </footer>
+
+  <!-- ════════════════════════════════════════════
+       DATA + JAVASCRIPT
+  ════════════════════════════════════════════ -->
+  <script>
+    const STATUS_MAP = {
+      success:  {
+        border: 'border-l-emerald-400', dot: 'text-emerald-500',
+        badge: 'bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200',
+        header: 'bg-emerald-50 border-b border-emerald-100',
+        icon: `<svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>`,
+      },
+      info: {
+        border: 'border-l-sky-400', dot: 'text-sky-500',
+        badge: 'bg-sky-50 text-sky-700 ring-1 ring-sky-200',
+        header: 'bg-sky-50 border-b border-sky-100',
+        icon: `<svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M12 2a10 10 0 100 20A10 10 0 0012 2z"/></svg>`,
+      },
+      warning: {
+        border: 'border-l-amber-400', dot: 'text-amber-500',
+        badge: 'bg-amber-50 text-amber-700 ring-1 ring-amber-200',
+        header: 'bg-amber-50 border-b border-amber-100',
+        icon: `<svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>`,
+      },
+      critical: {
+        border: 'border-l-rose-400', dot: 'text-rose-500',
+        badge: 'bg-rose-50 text-rose-700 ring-1 ring-rose-200',
+        header: 'bg-rose-50 border-b border-rose-100',
+        icon: `<svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>`,
+      },
+      upcoming: {
+        border: 'border-l-violet-400', dot: 'text-violet-500',
+        badge: 'bg-violet-50 text-violet-700 ring-1 ring-violet-200',
+        header: 'bg-violet-50 border-b border-violet-100',
+        icon: `<svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>`,
+      },
+    };
+
+    const EVENTS = [
+      {
+        sortKey: 201304,
+        date: 'Apr 23, 2013',
+        title: 'B1/B2 Tourist Visa Issued',
+        note: 'US visitor/business visa issued at US Embassy Manila. Valid for 10 years through April 21, 2023.',
+        status: 'success',
+        categories: ['visitor'],
+        badges: ['B1/B2 Issued', '10-Year Validity'],
+      },
+      {
+        sortKey: 201701,
+        date: 'Jan 9, 2017',
+        title: 'First US Entry — B1/B2 Visit',
+        note: 'Entered the United States on B1/B2 visitor visa for a short-term stay. 57-day visit prior to F1 student enrollment.',
+        status: 'info',
+        categories: ['visitor', 'travel'],
+        badges: ['B1/B2 Entry', 'Tourism'],
+      },
+      {
+        sortKey: 201703,
+        date: 'Mar 7, 2017',
+        title: 'Departed US — Return to Manila',
+        note: 'Left the United States and returned to Manila, Philippines after 57-day B1/B2 visit.',
+        status: 'info',
+        categories: ['visitor', 'travel'],
+        badges: ['B1/B2 Departure', 'Manila'],
+      },
+      {
+        sortKey: 201705,
+        date: 'May 25, 2017',
+        title: 'F1 Student Visa Issued',
+        note: 'F1 student visa issued at US Embassy Manila. Valid through May 9, 2022.',
+        status: 'success',
+        categories: ['student'],
+        badges: ['F1 Issued', 'Exp. May 2022'],
+      },
+      {
+        sortKey: 201706,
+        date: 'Jun 17, 2017',
+        title: 'Entered US — F1 Student (MBA)',
+        note: 'Entered the United States on new F1 student visa. Enrolled in MBA program at City University of Seattle; changed degree to MS Computer Science after a few quarters.',
+        status: 'success',
+        categories: ['student'],
+        badges: ['F1 Entry', 'MBA → MSCS', 'City Univ. Seattle'],
+      },
+      {
+        sortKey: 201712,
+        date: 'Dec 16–28, 2017',
+        title: 'Trip to Toronto / Brampton, Canada',
+        note: 'Left US and traveled to Toronto and Brampton, Ontario to visit cousins. Returned to the US on December 28, 2017. (Note: departure listed as 12-16-2017.)',
+        status: 'info',
+        categories: ['travel'],
+        badges: ['Canada', 'Family Visit', 'Toronto'],
+      },
+      {
+        sortKey: 201804,
+        date: 'Apr 22, 2018',
+        title: 'Day Trip to Victoria, BC',
+        note: 'Left US for a day trip to Victoria, British Columbia. Traveled via charter boat. Same-day return to the United States.',
+        status: 'info',
+        categories: ['travel'],
+        badges: ['Canada', 'Day Trip', 'Charter Boat', 'Victoria BC'],
+      },
+      {
+        sortKey: 201805,
+        date: 'May 26–28, 2018',
+        title: 'Weekend Trip to Vancouver',
+        note: 'Left US for a weekend leisure trip to Vancouver, Canada. Traveled via PHY (Peace Arch / Blaine) port of entry by car. Returned May 28, 2018.',
+        status: 'info',
+        categories: ['travel'],
+        badges: ['Canada', 'PHY Port', 'Vancouver', 'Leisure'],
+      },
+      {
+        sortKey: 201807,
+        date: 'Jul 14, 2018',
+        title: 'Day Trip to Vancouver',
+        note: 'Left US for a day trip to Vancouver, Canada. Traveled via PHY (Peace Arch) port of entry by car. Same-day return to the United States.',
+        status: 'info',
+        categories: ['travel'],
+        badges: ['Canada', 'Day Trip', 'PHY Port', 'Vancouver'],
+      },
+      {
+        sortKey: 201808,
+        date: 'Aug 31, 2018',
+        title: 'Day Trip to Vancouver (BLA Port)',
+        note: 'Left US for a day trip to Vancouver, Canada. Traveled via BLA (Blaine) port of entry by car. Same-day return to the United States.',
+        status: 'info',
+        categories: ['travel'],
+        badges: ['Canada', 'Day Trip', 'BLA Port', 'Vancouver'],
+      },
+      {
+        sortKey: 201812,
+        date: 'Dec 14, 2018 – Jan 1, 2019',
+        title: 'Philippines — Sister\'s Wedding',
+        note: 'Left US to travel to Manila, Philippines to attend sister\'s wedding. Returned to the United States on January 1, 2019.',
+        status: 'info',
+        categories: ['travel'],
+        badges: ['Philippines', 'Family Event', 'Sister\'s Wedding'],
+      },
+      {
+        sortKey: 201909,
+        date: 'Sep 30 – Oct 9, 2019',
+        title: 'Philippines — Father\'s Funeral',
+        note: 'Left US for emergency travel to Manila, Philippines following the passing of father. Returned to the United States on October 9, 2019.',
+        status: 'warning',
+        categories: ['travel'],
+        badges: ['Philippines', 'Bereavement', 'Emergency Travel'],
+      },
+      {
+        sortKey: 202003,
+        date: '2020',
+        title: 'MSCS Degree Completed',
+        note: 'Completed MS Computer Science degree at City University of Seattle. Transitioned to OPT employment authorization.',
+        status: 'success',
+        categories: ['student'],
+        badges: ['MSCS Completed', 'City Univ. Seattle'],
+      },
+      {
+        sortKey: 202004,
+        date: 'Apr 15, 2020',
+        title: 'OPT Authorized (1-Year)',
+        note: 'Optional Practical Training (OPT) authorized. Valid April 15, 2020 – April 14, 2021. Employers: City University of Seattle (04/20/20–03/19/21), Worldwide American (05/04/20–03/19/21), CodeDay (07/06/20–07/31/20), Cloudeagle (07/06/20–01/08/21), BeaconFire Inc (03/22/21–04/14/21).',
+        status: 'success',
+        categories: ['opt'],
+        badges: ['OPT Authorized', 'I-765', 'Apr 2020–Apr 2021'],
+      },
+      {
+        sortKey: 202104,
+        date: 'Apr 15, 2021',
+        title: 'OPT STEM Extension (24-Month)',
+        note: '24-month STEM OPT extension authorized. Valid April 15, 2021 – April 14, 2023. Employer: BeaconFire Inc (04/15/21–04/14/23).',
+        status: 'success',
+        categories: ['opt'],
+        badges: ['STEM OPT', '24-Month Extension', 'BeaconFire'],
+      },
+      {
+        sortKey: 202210,
+        date: 'Oct 1, 2022',
+        title: 'H-1B Status Change',
+        note: 'Status changed to H-1B specialty occupation worker. Valid October 1, 2022 – September 30, 2025. Sponsored by BeaconFire Solution Inc.',
+        status: 'success',
+        categories: ['work'],
+        badges: ['H-1B Approved', 'BeaconFire', 'Oct 2022–Sep 2025'],
+      },
+      {
+        sortKey: 202307,
+        date: 'Jul 11, 2023',
+        title: 'H-1B Revocation Notice Issued',
+        note: 'USCIS issued H-1B revocation notice on July 11, 2023. Employer (BeaconFire) did not inform Clark until October 30, 2023 — creating a 3.5-month gap during which Clark was unaware of loss of status.',
+        status: 'critical',
+        categories: ['work'],
+        badges: ['H-1B Revoked', 'USCIS Notice', 'Status Gap'],
+      },
+      {
+        sortKey: 202310,
+        date: 'Oct 30, 2023',
+        title: 'Informed of Revocation — Left USA',
+        note: 'Employer notified Clark of H-1B revocation on October 30, 2023 — the same day. Departed the United States the same day on a one-way ticket to Manila, Philippines. Accrued unlawful presence from July 11 to October 30, 2023 (approx. 111 days).',
+        status: 'critical',
+        categories: ['work', 'travel'],
+        badges: ['One-Way Departure', '~111 Days Unlawful Presence', 'Manila'],
+      },
+      {
+        sortKey: 202312,
+        date: 'Dec 6, 2023',
+        title: 'New F1 Student Visa Issued',
+        note: 'New F1 student visa obtained at US Embassy Manila. Valid through November 28, 2028. Filed to return and complete remaining MBA coursework.',
+        status: 'success',
+        categories: ['student'],
+        badges: ['F1 Issued', 'Exp. Nov 2028', 'New Application'],
+      },
+      {
+        sortKey: 202313,
+        date: 'Dec 26, 2023',
+        title: 'Re-Entered US on New F1',
+        note: 'Returned to the United States on new F1 student visa. Re-enrolled to complete remaining MBA coursework at City University of Seattle.',
+        status: 'success',
+        categories: ['student', 'travel'],
+        badges: ['F1 Re-Entry', 'MBA Return'],
+      },
+      {
+        sortKey: 202501,
+        date: '2025',
+        title: 'MBA Degree Completed',
+        note: 'Completed remaining MBA coursework and graduated from City University of Seattle. Currently enrolled in MS Data Science program.',
+        status: 'success',
+        categories: ['student'],
+        badges: ['MBA Completed', 'MS Data Science (Active)'],
+      },
+      {
+        sortKey: 202607,
+        date: 'Jul 19, 2026 (planned)',
+        title: 'Marriage to Justine Cho',
+        note: 'Signing marriage certificate with Justine Cho, Lawful Permanent Resident (Green Card holder as of July 13, 2026). This makes Clark immediately eligible to be petitioned as an Immediate Relative (IR-1/CR-1) — no visa backlog wait.',
+        status: 'upcoming',
+        categories: ['marriage'],
+        badges: ['Upcoming', 'Immediate Relative', 'IR-1 Eligible', 'LPR Spouse'],
+      },
+    ];
+
+    let activeFilter = 'all';
+    let sortAsc = true;
+    let cardIndex = 0;
+
+    function renderTimeline() {
+      const list  = document.getElementById('timeline-list');
+      const empty = document.getElementById('empty-state');
+      list.innerHTML = '';
+      cardIndex = 0;
+
+      let events = EVENTS.filter(e => activeFilter === 'all' || e.categories.includes(activeFilter));
+      events = [...events].sort((a, b) => sortAsc ? a.sortKey - b.sortKey : b.sortKey - a.sortKey);
+
+      if (!events.length) { empty.classList.remove('hidden'); return; }
+      empty.classList.add('hidden');
+
+      events.forEach((ev, idx) => {
+        const s = STATUS_MAP[ev.status];
+        const isLeft = cardIndex % 2 === 0;
+        cardIndex++;
+
+        const badgesHtml = ev.badges.map(b =>
+          `<span class="inline-flex items-center text-[10px] sm:text-xs font-semibold px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full ${s.badge}">${b}</span>`
+        ).join('');
+
+        const item = document.createElement('div');
+        item.className = `timeline-item relative ${isLeft ? 'card-left' : 'card-right'} pb-8 pl-7`;
+        item.dataset.categories = ev.categories.join(' ');
+        item.style.animationDelay = `${idx * 50}ms`;
+        if (activeFilter !== 'all' && !ev.categories.includes(activeFilter)) {
+          item.classList.add('hidden-by-filter');
+        }
+
+        // Dot color
+        const dotColorMap = {
+          success: '#10b981', info: '#38bdf8', warning: '#f59e0b',
+          critical: '#f43f5e', upcoming: '#a78bfa',
+        };
+        const dotColor = dotColorMap[ev.status];
+
+        item.innerHTML = `
+          <!-- Spine dot -->
+          <div class="timeline-dot ${s.dot}" style="color: ${dotColor}; background: ${dotColor};"></div>
+
+          <!-- Connector line (desktop only) -->
+          <div class="relative ${isLeft ? 'connector-left' : 'connector-right'}">
+            <div class="timeline-card relative bg-white rounded-2xl shadow-sm border border-slate-100 border-l-4 ${s.border} overflow-hidden">
+
+              <!-- Card header -->
+              <div class="${s.header} px-4 sm:px-5 pt-4 sm:pt-5 pb-3">
+                <div class="flex items-start justify-between gap-3 mb-2">
+                  <time class="text-[10px] sm:text-xs font-semibold tracking-widest uppercase ${s.dot} opacity-80">${ev.date}</time>
+                  <span class="${s.dot}">${s.icon}</span>
+                </div>
+                <h2 class="font-bold text-slate-800 text-sm sm:text-base leading-snug">${ev.title}</h2>
+              </div>
+
+              <!-- Card body -->
+              <div class="px-4 sm:px-5 py-3 sm:py-4">
+                <p class="text-slate-500 text-xs sm:text-sm leading-relaxed mb-3 line-clamp-2 sm:line-clamp-none">${ev.note}</p>
+                <div class="flex flex-wrap gap-1.5">${badgesHtml}</div>
+              </div>
+
+            </div>
+          </div>
+        `;
+
+        list.appendChild(item);
+      });
+    }
+
+    // Filter
+    document.getElementById('filter-bar').addEventListener('click', e => {
+      const btn = e.target.closest('.filter-chip');
+      if (!btn) return;
+      document.querySelectorAll('.filter-chip').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      activeFilter = btn.dataset.filter;
+      renderTimeline();
+    });
+
+    // Sort
+    const sortAscBtn  = document.getElementById('sort-asc');
+    const sortDescBtn = document.getElementById('sort-desc');
+    function setSortUI(asc) {
+      sortAsc = asc;
+      const on  = 'bg-white shadow text-slate-700';
+      const off = 'text-slate-500';
+      sortAscBtn.className  = `sort-btn text-xs font-medium px-3 py-1.5 rounded-full whitespace-nowrap ${asc ? on : off}`;
+      sortDescBtn.className = `sort-btn text-xs font-medium px-3 py-1.5 rounded-full whitespace-nowrap ${asc ? off : on}`;
+      renderTimeline();
+    }
+    sortAscBtn.addEventListener('click',  () => setSortUI(true));
+    sortDescBtn.addEventListener('click', () => setSortUI(false));
+
+    renderTimeline();
+  </script>
+
+</body>
+</html>
