@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Clark Ngo — Green Card Strategy Map | Status Timeline</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:           #0c1931;
+      --bg-mid:       #112240;
+      --surface:      #162d4a;
+      --surface-hi:   #1e3a5f;
+      --border:       #1e3a5f;
+      --border-hi:    #2d537a;
+
+      --text:         #d4e2f4;
+      --text-dim:     #5e84aa;
+      --text-muted:   #3d5f80;
+
+      --gold:         #e8a72e;
+      --gold-dim:     rgba(232,167,46,0.15);
+      --gold-border:  rgba(232,167,46,0.35);
+
+      --emerald:      #22c55e;
+      --emerald-dim:  rgba(34,197,94,0.12);
+      --emerald-border: rgba(34,197,94,0.3);
+
+      --rose:         #f43f5e;
+      --rose-dim:     rgba(244,63,94,0.12);
+      --rose-border:  rgba(244,63,94,0.3);
+
+      --amber:        #f59e0b;
+      --amber-dim:    rgba(245,158,11,0.12);
+      --amber-border: rgba(245,158,11,0.3);
+
+      --violet:       #a78bfa;
+      --violet-dim:   rgba(167,139,250,0.12);
+      --violet-border:rgba(167,139,250,0.3);
+
+      --blue:         #60a5fa;
+      --blue-dim:     rgba(96,165,250,0.10);
+      --blue-border:  rgba(96,165,250,0.25);
+
+      --spine:        #1e3a5f;
+      --spine-hi:     #2d537a;
+    }
+
+    html { background: var(--bg); color: var(--text); font-family: 'Inter', system-ui, sans-serif; }
+
+    body {
+      min-height: 100vh;
+      background: var(--bg);
+    }
+
+    /* ── Scrollbar ── */
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--surface-hi); border-radius: 99px; }
+
+    /* ══════════════════════════════════════════════
+       HEADER
+    ══════════════════════════════════════════════ */
+    .page-header {
+      background: #08111e;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .page-header-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      color: var(--text-dim);
+      text-decoration: none;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      transition: color 0.15s;
+    }
+    .back-link:hover { color: var(--text); }
+    .header-divider { color: var(--text-muted); font-size: 12px; }
+    .header-title { font-size: 14px; font-weight: 600; color: var(--text); }
+    .header-badge {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 99px;
+      background: var(--violet-dim);
+      border: 1px solid var(--violet-border);
+      color: var(--violet);
+    }
+
+    /* ══════════════════════════════════════════════
+       PAGE INTRO
+    ══════════════════════════════════════════════ */
+    .page-intro {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 40px 24px 12px;
+    }
+    .intro-eyebrow {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 8px;
+    }
+    .intro-title {
+      font-size: clamp(22px, 3vw, 32px);
+      font-weight: 800;
+      color: var(--text);
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+      text-wrap: balance;
+      margin-bottom: 10px;
+    }
+    .intro-sub {
+      font-size: 13px;
+      color: var(--text-dim);
+      line-height: 1.6;
+      max-width: 560px;
+    }
+
+    /* ══════════════════════════════════════════════
+       LEGEND
+    ══════════════════════════════════════════════ */
+    .legend {
+      max-width: 1100px;
+      margin: 20px auto 0;
+      padding: 0 24px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+    }
+    .legend-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    /* ══════════════════════════════════════════════
+       FLOWCHART WRAPPER
+    ══════════════════════════════════════════════ */
+    .chart-section {
+      max-width: 1100px;
+      margin: 28px auto 0;
+      padding: 0 24px;
+    }
+    .chart-scroll {
+      overflow-x: auto;
+      padding-bottom: 8px;
+    }
+    .chart-inner {
+      min-width: 700px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* ── Nodes ── */
+    .node {
+      position: relative;
+      border-radius: 10px;
+      border: 1px solid var(--border-hi);
+      background: var(--surface);
+      padding: 12px 18px;
+      text-align: center;
+    }
+    .node-eyebrow {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      margin-bottom: 3px;
+    }
+    .node-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.3;
+    }
+    .node-sub {
+      font-size: 11px;
+      color: var(--text-dim);
+      margin-top: 3px;
+      line-height: 1.4;
+    }
+
+    /* Trigger node */
+    .node-trigger {
+      background: var(--violet-dim);
+      border-color: var(--violet-border);
+      width: 300px;
+    }
+    .node-trigger .node-eyebrow { color: var(--violet); }
+
+    /* Action node */
+    .node-action {
+      background: var(--gold-dim);
+      border-color: var(--gold-border);
+      width: 360px;
+    }
+    .node-action .node-eyebrow { color: var(--gold); }
+
+    /* ── Vertical arrow ── */
+    .v-arrow {
+      width: 2px;
+      background: var(--spine-hi);
+      position: relative;
+      flex-shrink: 0;
+    }
+    .v-arrow::after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      left: 50%;
+      transform: translateX(-50%);
+      border: 5px solid transparent;
+      border-top-color: var(--spine-hi);
+    }
+
+    /* ── Fork connector ── */
+    .fork-row {
+      width: 100%;
+      display: flex;
+      align-items: flex-start;
+      position: relative;
+      padding: 0 80px;
+    }
+    .fork-line {
+      flex: 1;
+      height: 2px;
+      background: var(--spine-hi);
+      position: relative;
+      top: 0;
+      margin-top: 0;
+    }
+    .fork-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: var(--spine-hi);
+      flex-shrink: 0;
+      position: relative;
+      top: -4px;
+    }
+    .fork-down-left,
+    .fork-down-right {
+      width: 2px;
+      background: var(--spine-hi);
+      position: relative;
+    }
+    .fork-down-left::after,
+    .fork-down-right::after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      left: 50%;
+      transform: translateX(-50%);
+      border: 5px solid transparent;
+      border-top-color: var(--spine-hi);
+    }
+
+    /* ── Strategy columns ── */
+    .strategies {
+      width: 100%;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      align-items: start;
+    }
+
+    .strategy {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+    }
+
+    /* ── Strategy header banner ── */
+    .strategy-banner {
+      width: 100%;
+      border-radius: 10px 10px 0 0;
+      padding: 10px 16px;
+      text-align: center;
+      border: 1px solid;
+      border-bottom: none;
+    }
+    .strategy-banner-label {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      margin-bottom: 2px;
+    }
+    .strategy-banner-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .banner-consular {
+      background: var(--gold-dim);
+      border-color: var(--gold-border);
+    }
+    .banner-consular .strategy-banner-label { color: var(--gold); }
+
+    .banner-stateside {
+      background: var(--blue-dim);
+      border-color: var(--blue-border);
+    }
+    .banner-stateside .strategy-banner-label { color: var(--blue); }
+
+    /* ── Shared step node within strategy ── */
+    .strategy-node {
+      width: 100%;
+      padding: 11px 16px;
+      background: var(--surface);
+      border: 1px solid var(--border-hi);
+      border-top: none;
+      text-align: center;
+    }
+    .strategy-node .node-title { font-size: 12px; }
+    .strategy-node .node-sub { font-size: 10px; }
+
+    .strategy-node-warn {
+      background: var(--rose-dim);
+      border-color: var(--rose-border);
+    }
+    .strategy-node-warn .node-title { color: var(--rose); }
+
+    /* ── Scenario cards ── */
+    .scenarios {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      width: 100%;
+      border-top: none;
+    }
+
+    .scenario-card {
+      border: 1px solid var(--border-hi);
+      border-top: 2px solid;
+      padding: 14px 14px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      background: var(--bg-mid);
+    }
+    .scenario-card:first-child { border-right-width: 0; }
+
+    .scenario-code {
+      font-family: 'SF Mono', 'Consolas', 'Courier New', monospace;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+    .scenario-name {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.3;
+    }
+    .scenario-steps {
+      font-size: 10px;
+      color: var(--text-dim);
+      line-height: 1.55;
+      flex: 1;
+    }
+    .scenario-steps li {
+      list-style: none;
+      padding-left: 10px;
+      position: relative;
+      margin-bottom: 3px;
+    }
+    .scenario-steps li::before {
+      content: '›';
+      position: absolute;
+      left: 0;
+      color: var(--text-muted);
+    }
+
+    .outcome {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 6px 10px;
+      border-radius: 6px;
+      text-align: center;
+      letter-spacing: 0.03em;
+    }
+    .outcome-green {
+      background: var(--emerald-dim);
+      color: var(--emerald);
+      border: 1px solid var(--emerald-border);
+    }
+    .outcome-amber {
+      background: var(--amber-dim);
+      color: var(--amber);
+      border: 1px solid var(--amber-border);
+    }
+    .outcome-pivot {
+      background: var(--blue-dim);
+      color: var(--blue);
+      border: 1px solid var(--blue-border);
+    }
+
+    /* Scenario color variants */
+    .s1 { border-top-color: var(--gold); }
+    .s1 .scenario-code { color: var(--gold); }
+
+    .s2 { border-top-color: var(--blue); }
+    .s2 .scenario-code { color: var(--blue); }
+
+    .s3 { border-top-color: var(--amber); }
+    .s3 .scenario-code { color: var(--amber); }
+
+    .s4 { border-top-color: var(--rose); }
+    .s4 .scenario-code { color: var(--rose); }
+
+    /* ── Spacer / connecting glue between strategy-node sections ── */
+    .strategy-connector {
+      width: 2px;
+      height: 20px;
+      background: var(--spine-hi);
+      align-self: center;
+    }
+
+    /* ══════════════════════════════════════════════
+       COMPARISON TABLE
+    ══════════════════════════════════════════════ */
+    .table-section {
+      max-width: 1100px;
+      margin: 48px auto 0;
+      padding: 0 24px;
+    }
+    .section-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+    }
+    .table-scroll { overflow-x: auto; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+      min-width: 600px;
+    }
+    thead tr {
+      border-bottom: 1px solid var(--border-hi);
+    }
+    th {
+      padding: 10px 14px;
+      text-align: left;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+    th:not(:first-child) {
+      text-align: center;
+    }
+    th.s1h { color: var(--gold); }
+    th.s2h { color: var(--blue); }
+    th.s3h { color: var(--amber); }
+    th.s4h { color: var(--rose); }
+
+    tbody tr {
+      border-bottom: 1px solid var(--border);
+    }
+    tbody tr:last-child { border-bottom: none; }
+    td {
+      padding: 11px 14px;
+      color: var(--text-dim);
+      line-height: 1.45;
+      vertical-align: top;
+    }
+    td:first-child {
+      font-weight: 600;
+      color: var(--text);
+      font-size: 11px;
+      white-space: nowrap;
+      width: 20%;
+    }
+    td:not(:first-child) { text-align: center; }
+    .cell-good  { color: var(--emerald); font-weight: 600; }
+    .cell-warn  { color: var(--amber); font-weight: 600; }
+    .cell-bad   { color: var(--rose); font-weight: 600; }
+    .cell-info  { color: var(--blue); font-weight: 600; }
+    .cell-gold  { color: var(--gold); font-weight: 600; }
+    tbody tr:nth-child(odd) td { background: rgba(255,255,255,0.018); }
+
+    /* ══════════════════════════════════════════════
+       TAKEAWAYS
+    ══════════════════════════════════════════════ */
+    .takeaways-section {
+      max-width: 1100px;
+      margin: 48px auto 0;
+      padding: 0 24px 64px;
+    }
+    .takeaways-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+      margin-top: 16px;
+    }
+    .takeaway {
+      background: var(--surface);
+      border: 1px solid var(--border-hi);
+      border-radius: 12px;
+      padding: 20px;
+    }
+    .takeaway-num {
+      font-family: 'SF Mono', 'Consolas', monospace;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+    .takeaway-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 6px;
+      line-height: 1.3;
+    }
+    .takeaway-body {
+      font-size: 12px;
+      color: var(--text-dim);
+      line-height: 1.6;
+    }
+    .takeaway-body strong { color: var(--text); font-weight: 600; }
+
+    .takeaway-1 { border-left: 3px solid var(--gold); }
+    .takeaway-2 { border-left: 3px solid var(--blue); }
+    .takeaway-3 { border-left: 3px solid var(--emerald); }
+
+    /* ══════════════════════════════════════════════
+       FOOTER
+    ══════════════════════════════════════════════ */
+    .page-footer {
+      border-top: 1px solid var(--border);
+      padding: 20px 24px;
+      text-align: center;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    /* ── Utility ── */
+    .mt-auto { margin-top: auto; }
+    .w-full  { width: 100%; }
+
+    /* responsive */
+    @media (max-width: 640px) {
+      .page-intro { padding-top: 28px; }
+      .strategies { grid-template-columns: 1fr; gap: 32px; }
+      .fork-row { padding: 0 40px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ══════════════════════════════════════════
+       HEADER
+  ══════════════════════════════════════════ -->
+  <header class="page-header">
+    <div class="page-header-inner">
+      <div class="header-left">
+        <a href="clark-ngo.html" class="back-link">
+          <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+          Clark Ngo
+        </a>
+        <span class="header-divider">|</span>
+        <span class="header-title">Strategy Map</span>
+      </div>
+      <span class="header-badge">Post-Wedding</span>
+    </div>
+  </header>
+
+  <!-- ══════════════════════════════════════════
+       INTRO
+  ══════════════════════════════════════════ -->
+  <div class="page-intro">
+    <div class="intro-eyebrow">Green Card Path Analysis</div>
+    <h1 class="intro-title">The Strategic Decision Flowchart</h1>
+    <p class="intro-sub">Four scenarios that become available immediately after the I-130 is filed following the wedding. Each path has a different risk profile, timeline, and travel requirement.</p>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       LEGEND
+  ══════════════════════════════════════════ -->
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background:var(--gold)"></div> Recommended path</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--blue)"></div> Safe but long</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--amber)"></div> High risk</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--rose)"></div> Likely denial</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--emerald)"></div> Green card outcome</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--violet)"></div> Trigger event</div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       FLOWCHART
+  ══════════════════════════════════════════ -->
+  <section class="chart-section">
+    <div class="chart-scroll">
+      <div class="chart-inner">
+
+        <!-- TRUNK: Wedding → I-130 -->
+        <div class="node node-trigger">
+          <div class="node-eyebrow">Trigger Event</div>
+          <div class="node-title">Wedding — July 19, 2026</div>
+          <div class="node-sub">Clark Ngo weds Justine Cho (LPR, Green Card Jul 13)</div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;align-items:center">
+          <div class="v-arrow" style="height:24px"></div>
+        </div>
+
+        <div class="node node-action">
+          <div class="node-eyebrow">Immediate Action — Do Not Delay</div>
+          <div class="node-title">File Form I-130 (Petition for Alien Relative)</div>
+          <div class="node-sub">Locks in July 2026 Priority Date · Anchors all four scenarios</div>
+        </div>
+
+        <!-- Fork -->
+        <div style="display:flex;flex-direction:column;align-items:center">
+          <div class="v-arrow" style="height:20px"></div>
+        </div>
+
+        <div class="fork-row" style="width:min(700px,100%)">
+          <div class="fork-line"></div>
+          <div class="fork-dot"></div>
+          <div class="fork-line"></div>
+        </div>
+
+        <div style="width:min(700px,100%);display:grid;grid-template-columns:1fr 1fr;gap:24px">
+          <div style="display:flex;justify-content:center">
+            <div class="v-arrow" style="height:20px"></div>
+          </div>
+          <div style="display:flex;justify-content:center">
+            <div class="v-arrow" style="height:20px"></div>
+          </div>
+        </div>
+
+        <!-- STRATEGY COLUMNS -->
+        <div class="strategies" style="width:min(700px,100%)">
+
+          <!-- ── Strategy A: Consular ── -->
+          <div class="strategy">
+            <div class="strategy-banner banner-consular w-full">
+              <div class="strategy-banner-label">Strategy A — Recommended</div>
+              <div class="strategy-banner-title">Maintain Status + Consular Processing</div>
+            </div>
+            <div class="strategy-node w-full">
+              <div class="node-title">Keep F-1 Active — or Obtain University H-1B Shield</div>
+              <div class="node-sub">Do not file I-485. Do not use green card EAD. Status is your protection.</div>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:center;width:100%">
+              <div class="v-arrow" style="height:16px"></div>
+            </div>
+            <div class="scenarios w-full" style="border:1px solid var(--border-hi)">
+              <!-- Scenario 1 -->
+              <div class="scenario-card s1">
+                <div class="scenario-code">Scenario 01</div>
+                <div class="scenario-name">Pure Consular Processing</div>
+                <ul class="scenario-steps">
+                  <li>I-130 approved → case transferred to NVC</li>
+                  <li>Upload documents digitally from Seattle</li>
+                  <li>Priority Date becomes current</li>
+                  <li>2-week trip to Manila for medical + interview</li>
+                  <li>Fly back to Seattle with visa stamp</li>
+                </ul>
+                <div style="margin-top:4px">
+                  <div style="font-size:9px;color:var(--text-muted);font-weight:600;letter-spacing:.06em;text-transform:uppercase;margin-bottom:4px">H-1B Gap Risk</div>
+                  <div style="font-size:10px;color:var(--emerald);font-weight:600">None — not an inadmissibility bar at consular interview</div>
+                </div>
+                <div class="outcome outcome-green mt-auto">GREEN CARD APPROVED — ~2.5–3 yrs</div>
+              </div>
+              <!-- Scenario 2 -->
+              <div class="scenario-card s2">
+                <div class="scenario-code">Scenario 02</div>
+                <div class="scenario-name">Hold Strategy — Wait for USC</div>
+                <ul class="scenario-steps">
+                  <li>Continue on F-1 / Univ H-1B status</li>
+                  <li>Justine naturalizes to US Citizen (~July 2031)</li>
+                  <li>Upgrade I-130: F2A → Immediate Relative</li>
+                  <li>No visa backlog; file I-485 stateside</li>
+                  <li>All prior gaps 100% forgiven under §245(a)</li>
+                </ul>
+                <div style="margin-top:4px">
+                  <div style="font-size:9px;color:var(--text-muted);font-weight:600;letter-spacing:.06em;text-transform:uppercase;margin-bottom:4px">H-1B Gap Risk</div>
+                  <div style="font-size:10px;color:var(--emerald);font-weight:600">Zero — spouse-of-citizen rule forgives all past violations</div>
+                </div>
+                <div class="outcome outcome-green mt-auto">GREEN CARD ISSUED — ~5–6 yrs</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ── Strategy B: Stateside ── -->
+          <div class="strategy">
+            <div class="strategy-banner banner-stateside w-full">
+              <div class="strategy-banner-label">Strategy B — High Risk</div>
+              <div class="strategy-banner-title">Stateside I-485 Filing</div>
+            </div>
+            <div class="strategy-node w-full">
+              <div class="node-title">File I-130 + I-485 Concurrently</div>
+              <div class="node-sub">Triggers full USCIS audit — paystubs, W-2s, and historical status reviewed</div>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:center;width:100%">
+              <div class="v-arrow" style="height:16px"></div>
+            </div>
+            <div class="strategy-node strategy-node-warn w-full">
+              <div class="node-title">⚠ H-1B Gap & Unauthorized Wages Discovered</div>
+              <div class="node-sub">Jul 11 – Oct 30, 2023 (~111 days) · Employer-unreported revocation</div>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:center;width:100%">
+              <div class="v-arrow" style="height:16px"></div>
+            </div>
+            <div class="scenarios w-full" style="border:1px solid var(--border-hi)">
+              <!-- Scenario 3 -->
+              <div class="scenario-card s3">
+                <div class="scenario-code">Scenario 03</div>
+                <div class="scenario-name">Discretionary Approval</div>
+                <ul class="scenario-steps">
+                  <li>Officer grants a rare exception</li>
+                  <li>Gap attributed to employer concealment</li>
+                  <li>Case enters "pending hold zone"</li>
+                  <li>Wait for Jul 2026 PD to be current</li>
+                  <li>Interview at local USCIS office</li>
+                </ul>
+                <div style="margin-top:4px">
+                  <div style="font-size:9px;color:var(--text-muted);font-weight:600;letter-spacing:.06em;text-transform:uppercase;margin-bottom:4px">H-1B Gap Risk</div>
+                  <div style="font-size:10px;color:var(--amber);font-weight:600">High — requires sympathetic officer; not guaranteed</div>
+                </div>
+                <div class="outcome outcome-green mt-auto">GREEN CARD ISSUED — ~2.5–3 yrs</div>
+              </div>
+              <!-- Scenario 4 -->
+              <div class="scenario-card s4">
+                <div class="scenario-code">Scenario 04</div>
+                <div class="scenario-name">I-485 Denied</div>
+                <ul class="scenario-steps">
+                  <li>INA §245(c) bar strictly enforced</li>
+                  <li>Officer follows policy; no exception</li>
+                  <li>I-485 denied on record</li>
+                  <li>F-1 / Univ H-1B status preserved</li>
+                  <li>NOT placed in removal proceedings</li>
+                </ul>
+                <div style="margin-top:4px">
+                  <div style="font-size:9px;color:var(--text-muted);font-weight:600;letter-spacing:.06em;text-transform:uppercase;margin-bottom:4px">Recovery</div>
+                  <div style="font-size:10px;color:var(--blue);font-weight:600">Active status is your shield — pivot immediately to Scenario 1</div>
+                </div>
+                <div class="outcome outcome-pivot mt-auto">→ Pivot to Scenario 01 (Consular)</div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <!-- end strategies -->
+
+      </div>
+      <!-- end chart-inner -->
+    </div>
+    <!-- end chart-scroll -->
+  </section>
+
+  <!-- ══════════════════════════════════════════
+       COMPARISON TABLE
+  ══════════════════════════════════════════ -->
+  <section class="table-section">
+    <div class="section-label">Scenario Deep-Dive Comparison</div>
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>Metric</th>
+            <th class="s1h">S1 · Consular</th>
+            <th class="s2h">S2 · USC Hold</th>
+            <th class="s3h">S3 · Discretionary</th>
+            <th class="s4h">S4 · I-485 Denied</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>US Stay Risk</td>
+            <td class="cell-good">0% — Protected by F-1 / H-1B</td>
+            <td class="cell-good">0% — Protected by F-1 / H-1B</td>
+            <td class="cell-warn">Low — authorized stay, but F-1 voided if EAD used</td>
+            <td class="cell-good">0% — as long as EAD was never used</td>
+          </tr>
+          <tr>
+            <td>H-1B Gap Risk</td>
+            <td class="cell-good">No risk — not a consular inadmissibility bar</td>
+            <td class="cell-good">No risk — USC spouse rule forgives all violations</td>
+            <td class="cell-bad">High — requires discretionary exception from officer</td>
+            <td class="cell-bad">Enforced — INA §245(c) bar applied strictly</td>
+          </tr>
+          <tr>
+            <td>Est. Timeline</td>
+            <td class="cell-gold">~2.5–3 years (Early 2029)</td>
+            <td>~5–6 years (2031–2032)</td>
+            <td class="cell-gold">~2.5–3 years (Early 2029)</td>
+            <td class="cell-bad">Failed path → pivot required</td>
+          </tr>
+          <tr>
+            <td>Travel Required</td>
+            <td class="cell-warn">Yes — 2-week trip to Manila for medical + interview</td>
+            <td class="cell-good">No — fully processed inside the US</td>
+            <td class="cell-good">No — fully processed inside the US</td>
+            <td class="cell-warn">Yes — once denied, must pivot to Scenario 1</td>
+          </tr>
+          <tr>
+            <td>Verdict</td>
+            <td class="cell-gold">Clean reset button. Fastest safe path.</td>
+            <td class="cell-info">Safest long game. Zero risk if Justine naturalizes.</td>
+            <td class="cell-warn">Legal gamble. Do not rely on this path.</td>
+            <td class="cell-bad">Not a standalone path. Safety net only.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════
+       KEY TAKEAWAYS
+  ══════════════════════════════════════════ -->
+  <section class="takeaways-section">
+    <div class="section-label">3 Principles to Anchor the Strategy</div>
+    <div class="takeaways-grid">
+      <div class="takeaway takeaway-1">
+        <div class="takeaway-num">01 / Core Engine</div>
+        <div class="takeaway-title">The I-130 is filed immediately after the wedding</div>
+        <div class="takeaway-body">Filing the I-130 the week of July 19 is what makes all four scenarios possible. It acts as a <strong>permanent anchor in the immigration system</strong> — locking in the July 2026 Priority Date. Without it, no path exists.</div>
+      </div>
+      <div class="takeaway takeaway-2">
+        <div class="takeaway-num">02 / The Shield</div>
+        <div class="takeaway-title">F-1 status is the active legal shield</div>
+        <div class="takeaway-body">In Scenarios 1, 2, and 4, keeping student status active — and <strong>keeping the green card EAD in a drawer, unused</strong> — is the physical shield. Even if stateside I-485 fails, Clark remains 100% legal and can pivot cleanly.</div>
+      </div>
+      <div class="takeaway takeaway-3">
+        <div class="takeaway-num">03 / The Reset</div>
+        <div class="takeaway-title">Consular processing is the clean path forward</div>
+        <div class="takeaway-body">Scenario 1 is the fastest route (~2.5 years) with <strong>absolute legal protection from the H-1B gap history</strong>. A 2-week Manila trip is the only cost. It is also the recovery path if Scenario 3 or 4 play out.</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="page-footer">
+    Clark Ngo · Green Card Strategy Analysis · StatusTimeline · July 2026 · <em>Not legal advice — consult an immigration attorney.</em>
+  </div>
+
+</body>
+</html>
