@@ -48,6 +48,10 @@
       --blue-dim:     rgba(96,165,250,0.10);
       --blue-border:  rgba(96,165,250,0.25);
 
+      --teal:         #2dd4bf;
+      --teal-dim:     rgba(45,212,191,0.12);
+      --teal-border:  rgba(45,212,191,0.3);
+
       --spine:        #1e3a5f;
       --spine-hi:     #2d537a;
     }
@@ -346,6 +350,35 @@
     }
     .banner-stateside .strategy-banner-label { color: var(--blue); }
 
+    .banner-niw {
+      background: var(--teal-dim);
+      border-color: var(--teal-border);
+    }
+    .banner-niw .strategy-banner-label { color: var(--teal); }
+
+    /* ── Section divider ── */
+    .path-divider {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      width: min(700px,100%);
+      margin: 8px 0 4px;
+    }
+    .path-divider::before, .path-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border-hi);
+    }
+    .path-divider-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+
     /* ── Shared step node within strategy ── */
     .strategy-node {
       width: 100%;
@@ -453,6 +486,12 @@
     .s4 { border-top-color: var(--rose); }
     .s4 .scenario-code { color: var(--rose); }
 
+    .s5 { border-top-color: var(--teal); }
+    .s5 .scenario-code { color: var(--teal); }
+
+    .s6 { border-top-color: var(--text-muted); }
+    .s6 .scenario-code { color: var(--text-muted); }
+
     /* ── Spacer / connecting glue between strategy-node sections ── */
     .strategy-connector {
       width: 2px;
@@ -503,6 +542,7 @@
     th.s2h { color: var(--blue); }
     th.s3h { color: var(--amber); }
     th.s4h { color: var(--rose); }
+    th.s5h { color: var(--teal); }
 
     tbody tr {
       border-bottom: 1px solid var(--border);
@@ -574,6 +614,7 @@
     .takeaway-1 { border-left: 3px solid var(--gold); }
     .takeaway-2 { border-left: 3px solid var(--blue); }
     .takeaway-3 { border-left: 3px solid var(--emerald); }
+    .takeaway-4 { border-left: 3px solid var(--teal); }
 
     /* ══════════════════════════════════════════════
        FOOTER
@@ -623,7 +664,7 @@
   <div class="page-intro">
     <div class="intro-eyebrow">Green Card Path Analysis</div>
     <h1 class="intro-title">The Strategic Decision Flowchart</h1>
-    <p class="intro-sub">Four scenarios that become available immediately after the I-130 is filed following the wedding. Each path has a different risk profile, timeline, and travel requirement.</p>
+    <p class="intro-sub">Six scenarios: four that open up once the I-130 is filed following the wedding, plus a parallel EB-2 NIW self-petition that runs independently of the marriage. Each path has a different risk profile, timeline, and travel requirement.</p>
   </div>
 
   <!-- ══════════════════════════════════════════
@@ -636,6 +677,7 @@
     <div class="legend-item"><div class="legend-dot" style="background:var(--rose)"></div> Likely denial</div>
     <div class="legend-item"><div class="legend-dot" style="background:var(--emerald)"></div> Green card outcome</div>
     <div class="legend-item"><div class="legend-dot" style="background:var(--violet)"></div> Trigger event</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--teal)"></div> Independent path (self-petition)</div>
   </div>
 
   <!-- ══════════════════════════════════════════
@@ -797,6 +839,68 @@
         </div>
         <!-- end strategies -->
 
+        <!-- Divider -->
+        <div class="path-divider">
+          <span class="path-divider-label">Or — Run in Parallel, Independent of Marriage</span>
+        </div>
+
+        <!-- ── Strategy C: EB-2 NIW ── -->
+        <div class="strategy" style="width:min(700px,100%)">
+          <div class="strategy-banner banner-niw w-full">
+            <div class="strategy-banner-label">Strategy C — Parallel Hedge</div>
+            <div class="strategy-banner-title">EB-2 National Interest Waiver (Self-Petition)</div>
+          </div>
+          <div class="strategy-node w-full">
+            <div class="node-title">File I-140 EB-2 NIW — No Employer, No Labor Cert, No Marriage Dependency</div>
+            <div class="node-sub">Basis: MSCS (2020) + MBA (2025) + MS Data Science (in progress) = advanced degree. Self-petitions on the merit of Clark's own proposed endeavor — does not rely on Justine's status or the I-130 timeline.</div>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;width:100%">
+            <div class="v-arrow" style="height:16px"></div>
+          </div>
+          <div class="strategy-node w-full" style="background:var(--teal-dim);border-color:var(--teal-border)">
+            <div class="node-title" style="color:var(--teal)">Dhanasar 3-Prong Test</div>
+            <div class="node-sub">(1) Substantial merit &amp; national importance of the proposed work, (2) well positioned to advance it — degrees + achievements, (3) waiving the job-offer/labor-cert requirement benefits the US on balance.</div>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;width:100%">
+            <div class="v-arrow" style="height:16px"></div>
+          </div>
+          <div class="scenarios w-full" style="border:1px solid var(--border-hi)">
+            <!-- Scenario 5 -->
+            <div class="scenario-card s5">
+              <div class="scenario-code">Scenario 05</div>
+              <div class="scenario-name">EB-2 NIW Approved</div>
+              <ul class="scenario-steps">
+                <li>I-140 approved on own merits — no employer, no PERM</li>
+                <li>Own EB-2 priority date established at filing</li>
+                <li>Same status-shield rule applies: keep F-1 active, file I-485/consular only once safe (per Strategy A)</li>
+                <li>Two independent immigrant petitions now on file (I-130 + I-140)</li>
+              </ul>
+              <div style="margin-top:4px">
+                <div style="font-size:9px;color:var(--text-muted);font-weight:600;letter-spacing:.06em;text-transform:uppercase;margin-bottom:4px">Why it matters</div>
+                <div style="font-size:10px;color:var(--teal);font-weight:600">A green card path that survives even if the marriage or I-130 ever falls through</div>
+              </div>
+              <div class="outcome outcome-green mt-auto">SECOND, INDEPENDENT GREEN CARD ROUTE</div>
+            </div>
+            <!-- Scenario 6 -->
+            <div class="scenario-card s6">
+              <div class="scenario-code">Scenario 06</div>
+              <div class="scenario-name">EB-2 NIW RFE / Denied</div>
+              <ul class="scenario-steps">
+                <li>USCIS finds insufficient evidence of national importance</li>
+                <li>Self-petition — no employer relationship to protect, no status risk from filing</li>
+                <li>F-1 status and the marriage-based I-130 case are entirely untouched</li>
+                <li>Can refile later with a stronger endeavor statement</li>
+              </ul>
+              <div style="margin-top:4px">
+                <div style="font-size:9px;color:var(--text-muted);font-weight:600;letter-spacing:.06em;text-transform:uppercase;margin-bottom:4px">Recovery</div>
+                <div style="font-size:10px;color:var(--blue);font-weight:600">Zero downside — Strategy A/B remains the primary path, untouched</div>
+              </div>
+              <div class="outcome outcome-pivot mt-auto">NO IMPACT — Strategy A/B Still Primary</div>
+            </div>
+          </div>
+        </div>
+        <!-- end Strategy C -->
+
       </div>
       <!-- end chart-inner -->
     </div>
@@ -817,6 +921,7 @@
             <th class="s2h">S2 · USC Hold</th>
             <th class="s3h">S3 · Discretionary</th>
             <th class="s4h">S4 · I-485 Denied</th>
+            <th class="s5h">S5 · EB-2 NIW</th>
           </tr>
         </thead>
         <tbody>
@@ -826,6 +931,7 @@
             <td class="cell-good">0% — Protected by F-1 / H-1B</td>
             <td class="cell-warn">Low — authorized stay, but F-1 voided if EAD used</td>
             <td class="cell-good">0% — as long as EAD was never used</td>
+            <td class="cell-good">0% — self-petition, no employer or status change on filing</td>
           </tr>
           <tr>
             <td>H-1B Gap Risk</td>
@@ -833,6 +939,7 @@
             <td class="cell-good">No risk — USC spouse rule forgives all violations</td>
             <td class="cell-bad">High — requires discretionary exception from officer</td>
             <td class="cell-bad">Enforced — INA §245(c) bar applied strictly</td>
+            <td class="cell-warn">Same §245(c) bar applies at I-485 stage — mitigate via Strategy A shield</td>
           </tr>
           <tr>
             <td>Est. Timeline</td>
@@ -840,6 +947,7 @@
             <td>~5–6 years (2031–2032)</td>
             <td class="cell-gold">~2.5–3 years (Early 2029)</td>
             <td class="cell-bad">Failed path → pivot required</td>
+            <td class="cell-info">I-140: ~8–14 months; final GC timing then mirrors Strategy A</td>
           </tr>
           <tr>
             <td>Travel Required</td>
@@ -847,6 +955,15 @@
             <td class="cell-good">No — fully processed inside the US</td>
             <td class="cell-good">No — fully processed inside the US</td>
             <td class="cell-warn">Yes — once denied, must pivot to Scenario 1</td>
+            <td class="cell-good">No — I-140 filed entirely by mail/online, no interview</td>
+          </tr>
+          <tr>
+            <td>Dependency</td>
+            <td class="cell-warn">Depends on marriage remaining valid</td>
+            <td class="cell-warn">Depends on marriage remaining valid</td>
+            <td class="cell-warn">Depends on marriage + officer discretion</td>
+            <td class="cell-warn">Depends on marriage remaining valid</td>
+            <td class="cell-good">None — self-petitioned, independent of Justine's status</td>
           </tr>
           <tr>
             <td>Verdict</td>
@@ -854,6 +971,7 @@
             <td class="cell-info">Safest long game. Zero risk if Justine naturalizes.</td>
             <td class="cell-warn">Legal gamble. Do not rely on this path.</td>
             <td class="cell-bad">Not a standalone path. Safety net only.</td>
+            <td class="cell-gold">Cheap, low-risk hedge. File alongside Strategy A, not instead of it.</td>
           </tr>
         </tbody>
       </table>
@@ -864,7 +982,7 @@
        KEY TAKEAWAYS
   ══════════════════════════════════════════ -->
   <section class="takeaways-section">
-    <div class="section-label">3 Principles to Anchor the Strategy</div>
+    <div class="section-label">4 Principles to Anchor the Strategy</div>
     <div class="takeaways-grid">
       <div class="takeaway takeaway-1">
         <div class="takeaway-num">01 / Core Engine</div>
@@ -880,6 +998,11 @@
         <div class="takeaway-num">03 / The Reset</div>
         <div class="takeaway-title">Consular processing is the clean path forward</div>
         <div class="takeaway-body">Scenario 1 is the fastest route (~2.5 years) with <strong>absolute legal protection from the H-1B gap history</strong>. A 2-week Manila trip is the only cost. It is also the recovery path if Scenario 3 or 4 play out.</div>
+      </div>
+      <div class="takeaway takeaway-4">
+        <div class="takeaway-num">04 / The Hedge</div>
+        <div class="takeaway-title">EB-2 NIW runs in parallel, not instead</div>
+        <div class="takeaway-body">Clark's MSCS + MBA + MS Data Science qualify him to <strong>self-petition an I-140 with no employer and no dependency on the marriage</strong>. Filing it costs little and creates a second green card route that survives even if the I-130 case or the marriage itself ever runs into trouble.</div>
       </div>
     </div>
   </section>

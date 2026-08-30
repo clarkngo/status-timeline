@@ -171,6 +171,18 @@
   </div>
 
   <!-- ════════════════════════════════════════════
+       VISA / STATUS PROGRESSION STRIP
+  ════════════════════════════════════════════ -->
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 pt-4">
+    <div class="rounded-2xl border border-slate-200 bg-white p-3 sm:p-4">
+      <p class="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-2.5">Visa &amp; Status History</p>
+      <div class="overflow-x-auto scrollbar-hide">
+        <div class="flex items-stretch gap-0 w-max" id="status-progression"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════
        TIMELINE
   ════════════════════════════════════════════ -->
   <main class="max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-10">
@@ -256,6 +268,7 @@
         date: 'Apr 23, 2013',
         title: 'B1/B2 Tourist Visa Issued',
         note: 'US visitor/business visa issued at US Embassy Manila. Valid for 10 years through April 21, 2023.',
+        visaStatus: 'B1/B2 Visitor (Issued)',
         status: 'success',
         categories: ['visitor'],
         badges: ['B1/B2 Issued', '10-Year Validity'],
@@ -265,6 +278,7 @@
         date: 'Jan 9, 2017',
         title: 'First US Entry — B1/B2 Visit',
         note: 'Entered the United States on B1/B2 visitor visa for a short-term stay. 57-day visit prior to F1 student enrollment.',
+        visaStatus: 'B1/B2 Visitor',
         status: 'info',
         categories: ['visitor', 'travel'],
         badges: ['B1/B2 Entry', 'Tourism'],
@@ -274,6 +288,7 @@
         date: 'Mar 7, 2017',
         title: 'Departed US — Return to Manila',
         note: 'Left the United States and returned to Manila, Philippines after 57-day B1/B2 visit.',
+        visaStatus: 'B1/B2 Visitor',
         status: 'info',
         categories: ['visitor', 'travel'],
         badges: ['B1/B2 Departure', 'Manila'],
@@ -283,6 +298,7 @@
         date: 'May 25, 2017',
         title: 'F1 Student Visa Issued',
         note: 'F1 student visa issued at US Embassy Manila. Valid through May 9, 2022.',
+        visaStatus: 'F1 Student (Issued)',
         status: 'success',
         categories: ['student'],
         badges: ['F1 Issued', 'Exp. May 2022'],
@@ -292,6 +308,7 @@
         date: 'Jun 17, 2017',
         title: 'Entered US — F1 Student (MBA)',
         note: 'Entered the United States on new F1 student visa. Enrolled in MBA program at City University of Seattle; changed degree to MS Computer Science after a few quarters.',
+        visaStatus: 'F1 Student',
         status: 'success',
         categories: ['student'],
         badges: ['F1 Entry', 'MBA → MSCS', 'City Univ. Seattle'],
@@ -301,6 +318,7 @@
         date: 'Dec 16–28, 2017',
         title: 'Trip to Toronto / Brampton, Canada',
         note: 'Left US and traveled to Toronto and Brampton, Ontario to visit cousins. Returned to the US on December 28, 2017. (Note: departure listed as 12-16-2017.)',
+        visaStatus: 'F1 Student',
         status: 'info',
         categories: ['travel'],
         badges: ['Canada', 'Family Visit', 'Toronto'],
@@ -310,6 +328,7 @@
         date: 'Apr 22, 2018',
         title: 'Day Trip to Victoria, BC',
         note: 'Left US for a day trip to Victoria, British Columbia. Traveled via charter boat. Same-day return to the United States.',
+        visaStatus: 'F1 Student',
         status: 'info',
         categories: ['travel'],
         badges: ['Canada', 'Day Trip', 'Charter Boat', 'Victoria BC'],
@@ -319,6 +338,7 @@
         date: 'May 26–28, 2018',
         title: 'Weekend Trip to Vancouver',
         note: 'Left US for a weekend leisure trip to Vancouver, Canada. Traveled via PHY (Peace Arch / Blaine) port of entry by car. Returned May 28, 2018.',
+        visaStatus: 'F1 Student',
         status: 'info',
         categories: ['travel'],
         badges: ['Canada', 'PHY Port', 'Vancouver', 'Leisure'],
@@ -328,6 +348,7 @@
         date: 'Jul 14, 2018',
         title: 'Day Trip to Vancouver',
         note: 'Left US for a day trip to Vancouver, Canada. Traveled via PHY (Peace Arch) port of entry by car. Same-day return to the United States.',
+        visaStatus: 'F1 Student',
         status: 'info',
         categories: ['travel'],
         badges: ['Canada', 'Day Trip', 'PHY Port', 'Vancouver'],
@@ -337,6 +358,7 @@
         date: 'Aug 31, 2018',
         title: 'Day Trip to Vancouver (BLA Port)',
         note: 'Left US for a day trip to Vancouver, Canada. Traveled via BLA (Blaine) port of entry by car. Same-day return to the United States.',
+        visaStatus: 'F1 Student',
         status: 'info',
         categories: ['travel'],
         badges: ['Canada', 'Day Trip', 'BLA Port', 'Vancouver'],
@@ -346,6 +368,7 @@
         date: 'Dec 14, 2018 – Jan 1, 2019',
         title: 'Philippines — Sister\'s Wedding',
         note: 'Left US to travel to Manila, Philippines to attend sister\'s wedding. Returned to the United States on January 1, 2019.',
+        visaStatus: 'F1 Student',
         status: 'info',
         categories: ['travel'],
         badges: ['Philippines', 'Family Event', 'Sister\'s Wedding'],
@@ -355,6 +378,7 @@
         date: 'Sep 30 – Oct 9, 2019',
         title: 'Philippines — Father\'s Funeral',
         note: 'Left US for emergency travel to Manila, Philippines following the passing of father. Returned to the United States on October 9, 2019.',
+        visaStatus: 'F1 Student',
         status: 'warning',
         categories: ['travel'],
         badges: ['Philippines', 'Bereavement', 'Emergency Travel'],
@@ -364,6 +388,7 @@
         date: '2020',
         title: 'MSCS Degree Completed',
         note: 'Completed MS Computer Science degree at City University of Seattle. Transitioned to OPT employment authorization.',
+        visaStatus: 'F1 Student → OPT',
         status: 'success',
         categories: ['student'],
         badges: ['MSCS Completed', 'City Univ. Seattle'],
@@ -373,6 +398,7 @@
         date: 'Apr 15, 2020',
         title: 'OPT Authorized (1-Year)',
         note: 'Optional Practical Training (OPT) authorized. Valid April 15, 2020 – April 14, 2021. Employers: City University of Seattle (04/20/20–03/19/21), Worldwide American (05/04/20–03/19/21), CodeDay (07/06/20–07/31/20), Cloudeagle (07/06/20–01/08/21), BeaconFire Inc (03/22/21–04/14/21).',
+        visaStatus: 'F1 OPT (Post-Completion)',
         status: 'success',
         categories: ['opt'],
         badges: ['OPT Authorized', 'I-765', 'Apr 2020–Apr 2021'],
@@ -382,6 +408,7 @@
         date: 'Apr 15, 2021',
         title: 'OPT STEM Extension (24-Month)',
         note: '24-month STEM OPT extension authorized. Valid April 15, 2021 – April 14, 2023. Employer: BeaconFire Inc (04/15/21–04/14/23).',
+        visaStatus: 'F1 STEM OPT Extension',
         status: 'success',
         categories: ['opt'],
         badges: ['STEM OPT', '24-Month Extension', 'BeaconFire'],
@@ -391,6 +418,7 @@
         date: 'Oct 1, 2022',
         title: 'H-1B Status Change',
         note: 'Status changed to H-1B specialty occupation worker. Valid October 1, 2022 – September 30, 2025. Sponsored by BeaconFire Solution Inc.',
+        visaStatus: 'H-1B Specialty Worker',
         status: 'success',
         categories: ['work'],
         badges: ['H-1B Approved', 'BeaconFire', 'Oct 2022–Sep 2025'],
@@ -400,6 +428,7 @@
         date: 'Jul 11, 2023',
         title: 'H-1B Revocation Notice Issued',
         note: 'USCIS issued H-1B revocation notice on July 11, 2023. Employer (BeaconFire) did not inform Clark until October 30, 2023 — creating a 3.5-month gap during which Clark was unaware of loss of status.',
+        visaStatus: 'H-1B (Revoked — Unaware)',
         status: 'critical',
         categories: ['work'],
         badges: ['H-1B Revoked', 'USCIS Notice', 'Status Gap'],
@@ -409,6 +438,7 @@
         date: 'Oct 30, 2023',
         title: 'Informed of Revocation — Left USA',
         note: 'Employer notified Clark of H-1B revocation on October 30, 2023 — the same day. Departed the United States the same day on a one-way ticket to Manila, Philippines. Accrued unlawful presence from July 11 to October 30, 2023 (approx. 111 days).',
+        visaStatus: 'Out of Status — Unlawful Presence',
         status: 'critical',
         categories: ['work', 'travel'],
         badges: ['One-Way Departure', '~111 Days Unlawful Presence', 'Manila'],
@@ -418,6 +448,7 @@
         date: 'Dec 6, 2023',
         title: 'New F1 Student Visa Issued',
         note: 'New F1 student visa obtained at US Embassy Manila. Valid through November 28, 2028. Filed to return and complete remaining MBA coursework.',
+        visaStatus: 'F1 Student (New Visa Issued)',
         status: 'success',
         categories: ['student'],
         badges: ['F1 Issued', 'Exp. Nov 2028', 'New Application'],
@@ -427,6 +458,7 @@
         date: 'Dec 26, 2023',
         title: 'Re-Entered US on New F1',
         note: 'Returned to the United States on new F1 student visa. Re-enrolled to complete remaining MBA coursework at City University of Seattle.',
+        visaStatus: 'F1 Student',
         status: 'success',
         categories: ['student', 'travel'],
         badges: ['F1 Re-Entry', 'MBA Return'],
@@ -436,6 +468,7 @@
         date: '2025',
         title: 'MBA Degree Completed',
         note: 'Completed remaining MBA coursework and graduated from City University of Seattle. Currently enrolled in MS Data Science program.',
+        visaStatus: 'F1 Student (MS Data Science)',
         status: 'success',
         categories: ['student'],
         badges: ['MBA Completed', 'MS Data Science (Active)'],
@@ -445,6 +478,7 @@
         date: 'Jul 19, 2026',
         title: 'Married Justine Cho',
         note: 'Marriage certificate signed. Justine So Cho (LPR, Green Card holder since July 13, 2026) becomes Clark\'s petitioning spouse. Clark is now an Immediate Relative — no visa backlog, no wait for Priority Date to become current.',
+        visaStatus: 'F1 Student — Spouse of LPR',
         status: 'success',
         categories: ['marriage'],
         badges: ['Married', 'Immediate Relative', 'IR-1 Eligible'],
@@ -454,11 +488,37 @@
         date: 'Jul 21, 2026',
         title: 'I-130 Filed — Receipt Notice Received',
         note: 'Justine filed Form I-130 (Petition for Alien Relative) on behalf of Clark. USCIS received and issued receipt notice IOE9060039903. Priority Date established: July 21, 2026. Petitioner: Cho, Justine So (A204 122 450). Beneficiary: Ngo, Clark Jason Bautista (A116 531 237).',
+        visaStatus: 'F1 Student — I-130 Pending (Immediate Relative)',
         status: 'success',
         categories: ['marriage'],
         badges: ['I-130 Filed', 'Receipt IOE9060039903', 'PD Jul 21 2026'],
       },
     ];
+
+    const STATUS_PERIODS = [
+      { label: 'B1/B2 Visitor',        range: '2013 – 2017',       color: '#38bdf8' },
+      { label: 'F1 Student',           range: '2017 – 2020',       color: '#10b981' },
+      { label: 'F1 OPT',               range: 'Apr 2020 – Apr 2021', color: '#10b981' },
+      { label: 'F1 STEM OPT',          range: 'Apr 2021 – Sep 2022', color: '#10b981' },
+      { label: 'H-1B',                 range: 'Oct 2022 – Jul 2023', color: '#0ea5e9' },
+      { label: 'Out of Status',        range: 'Jul – Oct 2023',    color: '#f43f5e' },
+      { label: 'F1 Student',           range: 'Dec 2023 – present', color: '#10b981' },
+      { label: 'I-130 Pending (IR)',   range: 'Jul 2026 – present', color: '#a78bfa' },
+    ];
+
+    function renderStatusProgression() {
+      const el = document.getElementById('status-progression');
+      el.innerHTML = STATUS_PERIODS.map((p, i) => `
+        <div class="flex items-center">
+          <div class="flex flex-col items-center gap-1 px-3 py-1 min-w-[110px]">
+            <span class="w-2.5 h-2.5 rounded-full shrink-0" style="background:${p.color}"></span>
+            <span class="text-[11px] font-bold text-slate-700 whitespace-nowrap text-center">${p.label}</span>
+            <span class="text-[9px] font-medium text-slate-400 whitespace-nowrap">${p.range}</span>
+          </div>
+          ${i < STATUS_PERIODS.length - 1 ? `<svg class="w-3.5 h-3.5 text-slate-300 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>` : ''}
+        </div>
+      `).join('');
+    }
 
     let activeFilter = 'all';
     let sortAsc = true;
@@ -519,6 +579,10 @@
 
               <!-- Card body -->
               <div class="px-4 sm:px-5 py-3 sm:py-4">
+                <div class="inline-flex items-center gap-1.5 mb-2.5 px-2 py-1 rounded-md bg-slate-50 border border-slate-200">
+                  <svg class="w-3 h-3 text-slate-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                  <span class="text-[10px] sm:text-[11px] font-semibold text-slate-600">${ev.visaStatus}</span>
+                </div>
                 <p class="text-slate-500 text-xs sm:text-sm leading-relaxed mb-3 line-clamp-2 sm:line-clamp-none">${ev.note}</p>
                 <div class="flex flex-wrap gap-1.5">${badgesHtml}</div>
               </div>
@@ -555,6 +619,7 @@
     sortAscBtn.addEventListener('click',  () => setSortUI(true));
     sortDescBtn.addEventListener('click', () => setSortUI(false));
 
+    renderStatusProgression();
     renderTimeline();
   </script>
 
